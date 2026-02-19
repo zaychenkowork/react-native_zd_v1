@@ -7,7 +7,7 @@ type IconProps = {
   size?: number;
 } & Omit<SvgProps, 'width' | 'height'>;
 
-export function Icon({ name, size = 20, fill = '#FFFFFF', ...props }: IconProps) {
+export function Icon({ name, size = 20, fill = 'currentColor', ...props }: IconProps) {
   const SvgIcon = ICONS[name];
   if (!SvgIcon) return null;
   return <SvgIcon width={size} height={size} fill={fill} {...props} />;

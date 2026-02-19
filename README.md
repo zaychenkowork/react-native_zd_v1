@@ -1,50 +1,103 @@
-# Welcome to your Expo app 👋
+# React Native Template
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Expo-based React Native template with TypeScript, file-based routing, and a scalable modular architecture.
 
-## Get started
+## Tech Stack
 
-1. Install dependencies
+| Category     | Technology                      |
+| ------------ | ------------------------------- |
+| Framework    | React Native 0.81 + Expo SDK 54 |
+| Language     | TypeScript (strict mode)        |
+| Navigation   | Expo Router (file-based)        |
+| Server State | TanStack React Query v5         |
+| Client State | Zustand v5                      |
+| Validation   | Zod v4                          |
+| HTTP Client  | Axios                           |
+| Forms        | React Hook Form v7              |
+| Storage      | MMKV                            |
+| Animations   | Reanimated v4                   |
 
-   ```bash
-   npm install
-   ```
+## Quick Start
 
-2. Start the app
+### Prerequisites
 
-   ```bash
-   npx expo start
-   ```
+- Node.js >= 18
+- Yarn
+- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- iOS Simulator (macOS) or Android Emulator
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+### Installation
 
 ```bash
-npm run reset-project
+yarn install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### Environment Setup
 
-## Learn more
+Copy the example env file and fill in the values:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+cp .env.example .env
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Run the App
 
-## Join the community
+```bash
+yarn start        # Start Expo dev server
+yarn ios          # Run on iOS Simulator
+yarn android      # Run on Android Emulator
+```
 
-Join our community of developers creating universal apps.
+## Project Structure
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```
+src/
+├── api/            # Axios instance and API methods
+├── app/            # Expo Router screens and layouts
+├── config/         # App config (env values, query defaults)
+├── hooks/          # Custom hooks
+│   └── query/      # React Query hooks (fetch, mutate)
+├── lib/            # Utilities (storage, env validation)
+├── providers/      # React context providers
+├── schemas/        # Zod schemas for runtime validation
+├── store/          # Zustand stores (client state)
+├── types/          # TypeScript types, enums, API contracts
+└── ui/
+    ├── assets/     # Icons (SVG), images, fonts
+    └── components/ # Reusable atomic components (Icon, Button)
+```
+
+### State Management
+
+| What                                       | Where           |
+| ------------------------------------------ | --------------- |
+| Server data (API responses, cache)         | React Query     |
+| Client state (UI, auth token, preferences) | Zustand         |
+| Form state                                 | React Hook Form |
+| Persistent storage                         | MMKV            |
+
+### SVG Icons
+
+SVGs are imported as React components via `react-native-svg-transformer`. Use the `<Icon>` component with the icon registry in `src/ui/assets/icons/`.
+
+## Conventions
+
+| Rule                        | Description                                               |
+| --------------------------- | --------------------------------------------------------- |
+| One store per file          | `use[Name]Store.ts` — see `src/store/README.md`           |
+| One query hook per resource | `use[Resource]Query.ts` — see `src/hooks/query/README.md` |
+| Re-export from index        | Every folder has an `index.ts` barrel file                |
+| Selectors only              | Never subscribe to the whole Zustand store                |
+| Typed routes                | All routes are type-safe via Expo Router                  |
+
+### Environment Validation
+
+Environment variables are validated at build time via Zod schema (`src/schemas/env.ts`). Direct access to `process.env` is blocked by an ESLint rule — use `CONFIG` from `@/config` instead.
+
+## Environment Variables
+
+| Variable                | Description                                  | Example                   |
+| ----------------------- | -------------------------------------------- | ------------------------- |
+| `EXPO_PUBLIC_RUN_MODE`  | App environment                              | `dev` / `stg` / `prod`    |
+| `EXPO_PUBLIC_API_URL`   | API base URL                                 | `https://api.example.com` |
+| `STRICT_ENV_VALIDATION` | Enable strict Zod validation before prebuild | `true` / `false`          |
