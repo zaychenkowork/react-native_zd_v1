@@ -1,9 +1,9 @@
-import { Env } from './env';
+import Env from 'env';
 
-export type Environment = (typeof Env)['EXPO_PUBLIC_ENVIRONMENT'];
 
 export const CONFIG = {
   API_URL: Env.EXPO_PUBLIC_API_URL,
-  ENVIRONMENT: Env.EXPO_PUBLIC_ENVIRONMENT,
-  IS_DEV: __DEV__,
+  RUN_MODE: Env.EXPO_PUBLIC_RUN_MODE,
+  NAME: Env.EXPO_PUBLIC_NAME,
+  VERSION: Env.EXPO_PUBLIC_VERSION,
 } as const;

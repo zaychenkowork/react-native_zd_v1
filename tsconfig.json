@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@env": ["env.ts"]
     },
     "checkJs": true,
     "strict": true,
@@ -13,7 +14,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "expo-env.d.ts",
+    "env.ts"
   ],
   "exclude": [
     "node_modules",
