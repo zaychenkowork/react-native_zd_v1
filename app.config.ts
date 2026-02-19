@@ -1,8 +1,9 @@
 import type { AppIconBadgeConfig } from 'app-icon-badge/types';
 import type { ConfigContext, ExpoConfig } from 'expo/config';
 
-import Env from './env';
+import 'tsx/cjs';
 
+import Env from './env';
 
 const appIconBadgeConfig: AppIconBadgeConfig = {
   enabled: Env.EXPO_PUBLIC_RUN_MODE !== 'prod',
