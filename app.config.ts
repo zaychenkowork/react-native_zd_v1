@@ -1,24 +1,55 @@
+import type { AppIconBadgeConfig } from 'app-icon-badge/types';
 import type { ConfigContext, ExpoConfig } from 'expo/config';
+
+import Env from './env';
+
+
+const appIconBadgeConfig: AppIconBadgeConfig = {
+  enabled: Env.EXPO_PUBLIC_RUN_MODE !== 'prod',
+  badges: [
+    {
+      text: Env.EXPO_PUBLIC_RUN_MODE,
+      type: 'banner',
+      color: 'white',
+    },
+    {
+      text: Env.EXPO_PUBLIC_VERSION.toString(),
+      type: 'ribbon',
+      color: 'white',
+    },
+  ],
+};
+
+const EXPO_ACCOUNT_OWNER = 'testexpo-owner';
+const EAS_PROJECT_ID = 'testexpo-owner';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: 'react-native_zd_v1',
+  name: Env.EXPO_PUBLIC_NAME,
+  description: `${Env.EXPO_PUBLIC_NAME} Mobile App`,
+  owner: EXPO_ACCOUNT_OWNER,
+
+  scheme: Env.EXPO_PUBLIC_SCHEME,
   slug: 'react-native_zd_v1',
-  version: '1.0.0',
+
+  version: Env.EXPO_PUBLIC_VERSION.toString(),
+
   orientation: 'portrait',
-  icon: './assets/images/icon.png',
-  scheme: 'reactnativezdv1',
+  icon: './assets/icon.png',
+
   userInterfaceStyle: 'automatic',
   newArchEnabled: true,
   ios: {
     supportsTablet: true,
+    bundleIdentifier: Env.EXPO_PUBLIC_BUNDLE_ID,
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+    },
   },
   android: {
     adaptiveIcon: {
       backgroundColor: '#E6F4FE',
-      foregroundImage: './assets/images/android-icon-foreground.png',
-      backgroundImage: './assets/images/android-icon-background.png',
-      monochromeImage: './assets/images/android-icon-monochrome.png',
+      foregroundImage: './assets/adaptive-icon.png',
     },
     edgeToEdgeEnabled: true,
   },
@@ -31,18 +62,19 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     [
       'expo-splash-screen',
       {
-        image: './assets/images/splash-icon.png',
-        imageWidth: 200,
-        resizeMode: 'contain',
-        backgroundColor: '#ffffff',
-        dark: {
-          backgroundColor: '#000000',
-        },
+        backgroundColor: '#2E3C4B',
+        image: './assets/splash-icon.png',
+        imageWidth: 150,
       },
     ],
+    ['app-icon-badge', appIconBadgeConfig],
   ],
   experiments: {
     typedRoutes: true,
-    reactCompiler: true,
+  },
+  extra: {
+    eas: {
+      projectId: EAS_PROJECT_ID,
+    },
   },
 });
