@@ -1,1 +1,1 @@
-export * from './APIProvider';
+export { QueryProvider } from './QueryProvider';

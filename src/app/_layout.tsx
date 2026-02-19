@@ -1,10 +1,10 @@
-import { APIProvider } from "@/providers";
-import { Stack } from "expo-router";
+import { QueryProvider } from '@/providers';
+import { Stack } from 'expo-router';
 
 export default function RootLayout() {
   return (
-    <APIProvider>
+    <QueryProvider>
       <Stack />
-    </APIProvider>
+    </QueryProvider>
   );
 }
