@@ -1,3 +1,4 @@
+
 import type { z } from 'zod';
 
 interface ValidateEnvOptions<T extends z.ZodType> {

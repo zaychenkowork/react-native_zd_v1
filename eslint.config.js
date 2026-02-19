@@ -12,14 +12,14 @@ module.exports = defineConfig([
         'error',
         {
           selector:
-            "MemberExpression[object.object.name='process'][object.property.name='env']",
-          message: 'Use CONFIG from @/config instead of process.env',
+            "MemberExpression[object.name='process'][property.name='env']",
+          message: 'Use Env from env.ts or CONFIG from @/config instead of process.env',
         },
       ],
     },
   },
   {
-    files: ['src/config/env.ts', 'app.config.ts'],
+    files: ['env.ts', 'app.config.ts'],
     rules: {
       'no-restricted-syntax': 'off',
     },

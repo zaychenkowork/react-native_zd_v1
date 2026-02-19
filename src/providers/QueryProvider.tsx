@@ -6,5 +6,7 @@ const queryClient = new QueryClient();
 
 export function QueryProvider({ children }: { children: ReactNode }) {
   useReactQueryDevTools(queryClient);
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
 }
