@@ -6,6 +6,7 @@ const eslintConfigPrettier = require('eslint-config-prettier/flat');
 module.exports = defineConfig([
   expoConfig,
   ...queryPlugin.configs['flat/recommended'],
+  ignorePatterns: ['scripts/**/*.js'],
   {
     rules: {
       'no-restricted-syntax': [
@@ -13,7 +14,8 @@ module.exports = defineConfig([
         {
           selector:
             "MemberExpression[object.name='process'][property.name='env']",
-          message: 'Use Env from env.ts or CONFIG from @/config instead of process.env',
+          message:
+            'Use Env from env.ts or CONFIG from @/config instead of process.env',
         },
       ],
     },

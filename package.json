@@ -20,7 +20,8 @@
     "eas:prod:ios": "eas build --profile production --platform ios",
     "eas:prod:android": "eas build --profile production --platform android",
     "eas:prod:ios:submit": "eas build --profile production --platform ios --auto-submit",
-    "eas:prod:android:submit": "eas build --profile production --platform android --auto-submit"
+    "eas:prod:android:submit": "eas build --profile production --platform android --auto-submit",
+    "android:setup": "node scripts/setup-android-sdk.js"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.21",

@@ -69,6 +69,7 @@ Then run on device/emulator:
 
 ```bash
 yarn ios             # Build and run on iOS Simulator
+yarn android:setup   # (Android only) Create local.properties with SDK path
 yarn android         # Build and run on Android Emulator
 ```
 
@@ -92,7 +93,10 @@ For a signed `.ipa` (App Store / TestFlight):
 
 #### Android
 
+If you get "SDK location not found", run `yarn android:setup` first.
+
 ```bash
+yarn android:setup         # Create local.properties with SDK path (if needed)
 yarn android:release       # Build .apk (for direct install / testing)
 yarn android:release:aab   # Build .aab (for Google Play)
 ```
@@ -223,6 +227,7 @@ Environment variables are validated at build time via Zod schema (`src/schemas/e
 | `yarn lint`                    | Run ESLint                                      |
 | `yarn prebuild`                | Generate native ios/ and android/ folders       |
 | `yarn prebuild:clean`          | Clean regeneration of native folders            |
+| `yarn android:setup`           | Create android/local.properties with SDK path   |
 | `yarn ios`                     | Build and run on iOS Simulator (debug)          |
 | `yarn android`                 | Build and run on Android (debug)                |
 | `yarn ios:release`             | Local iOS release build                         |
