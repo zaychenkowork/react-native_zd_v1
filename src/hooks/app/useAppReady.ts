@@ -1,5 +1,5 @@
-import { queryClient } from '@/providers';
-import { hydrateAuth, useAuthStore } from '@/store';
+// import { queryClient } from '@/providers';
+import { useAuthStore, waitForAuthHydration } from '@/store';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 
@@ -9,7 +9,7 @@ export function useAppReady() {
   useEffect(() => {
     async function prepare() {
       try {
-        await hydrateAuth();
+        await waitForAuthHydration();
 
         const token = useAuthStore.getState().token;
         if (token) {
@@ -19,7 +19,6 @@ export function useAppReady() {
           //   queryKey: [QueryKey.UserProfile],
           //   queryFn: fetchProfile,
           // });
-          void queryClient;
         }
       } catch (error) {
         console.warn('App preparation failed:', error);

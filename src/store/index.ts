@@ -1,1 +1,6 @@
-export { useAuthStore, hydrateAuth, signIn, signOut } from './useAuthStore';
+export {
+  useAuthStore,
+  waitForAuthHydration,
+  signIn,
+  signOut,
+} from './useAuthStore';

@@ -1,5 +1,4 @@
 import { useAuthStore } from '@/store';
-import { router } from 'expo-router';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 export default function SignInScreen() {
@@ -7,7 +6,6 @@ export default function SignInScreen() {
 
   const handleSignIn = () => {
     signIn('mock-token');
-    router.replace('/');
   };
 
   return (
