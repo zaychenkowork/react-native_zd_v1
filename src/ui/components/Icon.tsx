@@ -1,6 +1,6 @@
 import type { SvgProps } from 'react-native-svg';
 
-import { ICONS, type IconName } from '@/ui/assets/icons';
+import { type IconName,ICONS } from '@/ui/assets/icons';
 
 type IconProps = {
   name: IconName;

@@ -1,5 +1,6 @@
-import { useAuthStore } from '@/store';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+
+import { useAuthStore } from '@/store';
 
 export default function SignInScreen() {
   const signIn = useAuthStore((s) => s.signIn);

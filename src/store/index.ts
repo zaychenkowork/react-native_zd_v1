@@ -1,6 +1,6 @@
 export {
-  useAuthStore,
-  waitForAuthHydration,
   signIn,
   signOut,
+  useAuthStore,
+  waitForAuthHydration,
 } from './useAuthStore';

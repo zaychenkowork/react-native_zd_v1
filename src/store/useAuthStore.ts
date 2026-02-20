@@ -1,7 +1,9 @@
-import { STORAGE_KEYS } from '@/constants';
-import { zustandStorage } from '@/lib';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+
+import { zustandStorage } from '@/lib';
+
+import { STORAGE_KEYS } from '@/constants';
 
 interface AuthState {
   token: string | null;

@@ -1,7 +1,8 @@
 // import { queryClient } from '@/providers';
-import { useAuthStore, waitForAuthHydration } from '@/store';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
+
+import { useAuthStore, waitForAuthHydration } from '@/store';
 
 export function useAppReady() {
   const [isReady, setIsReady] = useState(false);

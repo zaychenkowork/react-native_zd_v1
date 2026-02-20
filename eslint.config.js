@@ -2,12 +2,56 @@ const { defineConfig } = require('eslint/config');
 const expoConfig = require('eslint-config-expo/flat');
 const queryPlugin = require('@tanstack/eslint-plugin-query');
 const eslintConfigPrettier = require('eslint-config-prettier/flat');
+const simpleImportSort = require('eslint-plugin-simple-import-sort');
 
 module.exports = defineConfig([
   expoConfig,
   ...queryPlugin.configs['flat/recommended'],
   {
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
     rules: {
+      'simple-import-sort/imports': [
+        'error',
+        {
+          groups: [
+            // Side effect imports
+            ['^\\u0000'],
+            // Node.js builtins
+            ['^node:'],
+            // External packages (third-party)
+            ['^@?\\w'],
+            // Internal: components (ui)
+            ['^@/ui'],
+            // Internal: hooks
+            ['^@/hooks'],
+            // Internal: providers
+            ['^@/providers'],
+            // Internal: lib
+            ['^@/lib'],
+            // Internal: api
+            ['^@/api'],
+            // Internal: store
+            ['^@/store'],
+            // Internal: types
+            ['^@/types'],
+            // Internal: constants
+            ['^@/constants'],
+            // Internal: schemas
+            ['^@/schemas'],
+            // Internal: config
+            ['^@/config'],
+            // Internal: other @/
+            ['^@/'],
+            // Style files (css, scss, styles.ts)
+            ['\\.(css|scss|sass|less)$', '\\.styles\\.(ts|tsx)$'],
+            // Relative imports
+            ['^\\.'],
+          ],
+        },
+      ],
+      'simple-import-sort/exports': 'error',
       'no-restricted-syntax': [
         'error',
         {

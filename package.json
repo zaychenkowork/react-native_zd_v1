@@ -57,6 +57,7 @@
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "tsx": "^4.21.0",
     "typescript": "~5.9.2"
   },
