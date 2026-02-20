@@ -1,11 +1,11 @@
-import { validateEnv } from '@/lib/validate-env';
-import { envSchema, type Env } from '@/schemas';
+import { validateEnv } from '@/lib/validateEnv';
+import { envSchema, type Env as EnvType } from '@/schemas';
 
 import packageJSON from './package.json';
 
 // Config records per environment
 const EXPO_PUBLIC_RUN_MODE = (process.env.EXPO_PUBLIC_RUN_MODE ??
-  'dev') as Env['EXPO_PUBLIC_RUN_MODE'];
+  'dev') as EnvType['EXPO_PUBLIC_RUN_MODE'];
 
 const BUNDLE_IDS = {
   dev: 'com.testexpo-owner.dev',
@@ -31,7 +31,7 @@ const NAME = 'testexpo-owner';
 const STRICT_ENV_VALIDATION = process.env.STRICT_ENV_VALIDATION === 'true';
 
 // Build env object
-const _env: Env = {
+const _env: EnvType = {
   EXPO_PUBLIC_RUN_MODE,
 
   EXPO_PUBLIC_NAME: NAME,
@@ -47,9 +47,9 @@ const _env: Env = {
 
 const Env = STRICT_ENV_VALIDATION
   ? validateEnv({
-    schema: envSchema,
-    env: _env,
-  })
+      schema: envSchema,
+      env: _env,
+    })
   : _env;
 
 export default Env;
