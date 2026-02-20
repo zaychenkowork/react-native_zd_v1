@@ -31,7 +31,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   owner: EXPO_ACCOUNT_OWNER,
 
   scheme: Env.EXPO_PUBLIC_SCHEME,
-  slug: 'test-teamplate',
+  slug: 'test-template',
 
   version: Env.EXPO_PUBLIC_VERSION.toString(),
 
