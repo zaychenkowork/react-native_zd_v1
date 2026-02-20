@@ -1,10 +1,10 @@
+import { useAppReady } from '@/hooks';
 import { QueryProvider } from '@/providers';
+import { useAuthStore } from '@/store';
 import { ErrorFallback } from '@/ui/components';
-import { useFonts } from 'expo-font';
 import { type ErrorBoundaryProps, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 SplashScreen.preventAutoHideAsync();
@@ -14,26 +14,32 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 }
 
 export default function RootLayout() {
-  const [fontsLoaded, fontError] = useFonts({
-    // 'Inter-Regular': require('@/ui/assets/fonts/Inter-Regular.ttf'),
-  });
+  const isReady = useAppReady();
 
-  useEffect(() => {
-    if (fontsLoaded || fontError) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded, fontError]);
-
-  if (!fontsLoaded && !fontError) {
-    return null;
-  }
+  if (!isReady) return null;
 
   return (
     <SafeAreaProvider>
       <QueryProvider>
-        <Stack />
+        <RootNavigator />
         <StatusBar style="auto" />
       </QueryProvider>
     </SafeAreaProvider>
+  );
+}
+
+function RootNavigator() {
+  const isAuthenticated = useAuthStore((s) => !!s.token);
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Protected guard={isAuthenticated}>
+        <Stack.Screen name="(app)" />
+      </Stack.Protected>
+      <Stack.Protected guard={!isAuthenticated}>
+        <Stack.Screen name="sign-in" />
+      </Stack.Protected>
+      <Stack.Screen name="+not-found" />
+    </Stack>
   );
 }

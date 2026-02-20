@@ -1,1 +1,1 @@
-export { STORAGE_KEYS } from './storageKeys';
+export { STORAGE_KEYS, type StorageKey } from './storageKeys';
