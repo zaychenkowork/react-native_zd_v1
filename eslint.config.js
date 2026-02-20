@@ -29,7 +29,7 @@ module.exports = defineConfig([
             // Internal: providers
             ['^@/providers'],
             // Internal: lib
-            ['^@/lib'],
+            ['^@/utils'],
             // Internal: api
             ['^@/api'],
             // Internal: store

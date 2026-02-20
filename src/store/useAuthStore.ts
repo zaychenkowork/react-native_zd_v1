@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { zustandStorage } from '@/lib';
+import { zustandStorage } from '@/utils';
 
 import { STORAGE_KEYS } from '@/constants';
 

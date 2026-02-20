@@ -185,7 +185,7 @@ src/
 ├── hooks/          # Global custom hooks
 │   ├── app/        # App lifecycle hooks (ready, focus, online)
 │   └── query/      # React Query hooks (fetch, mutate)
-├── lib/            # Utilities (storage, env validation)
+├── utils/          # Utilities (storage, env validation, adapters)
 ├── providers/      # React context providers
 ├── schemas/        # Zod schemas for runtime validation
 ├── store/          # Zustand stores (client state)
