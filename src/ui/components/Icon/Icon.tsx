@@ -1,11 +1,6 @@
-import type { SvgProps } from 'react-native-svg';
+import { ICONS } from '@/ui/assets/icons';
 
-import { type IconName,ICONS } from '@/ui/assets/icons';
-
-type IconProps = {
-  name: IconName;
-  size?: number;
-} & Omit<SvgProps, 'width' | 'height'>;
+import type { IconProps } from './types';
 
 export function Icon({ name, size = 20, fill = 'currentColor', ...props }: IconProps) {
   const SvgIcon = ICONS[name];

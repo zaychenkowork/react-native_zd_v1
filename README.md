@@ -178,21 +178,50 @@ yarn eas:prod:android:submit   # Build Android + upload to Google Play
 ```
 src/
 ├── api/            # Axios instance and API methods
-├── app/            # Expo Router screens and layouts
+├── app/            # Expo Router — thin route files only
 ├── config/         # App config (env values, query defaults)
 ├── constants/      # Shared constants (storage keys, etc.)
-├── hooks/          # Custom hooks
+├── features/       # Business features (screens, feature components, local hooks)
+├── hooks/          # Global custom hooks
 │   ├── app/        # App lifecycle hooks (ready, focus, online)
 │   └── query/      # React Query hooks (fetch, mutate)
 ├── lib/            # Utilities (storage, env validation)
 ├── providers/      # React context providers
 ├── schemas/        # Zod schemas for runtime validation
 ├── store/          # Zustand stores (client state)
-├── types/          # TypeScript types, enums, API contracts
+├── types/          # Global TypeScript types, enums, API contracts
 └── ui/
     ├── assets/     # Icons (SVG), images, fonts
-    └── components/ # Reusable atomic components (Icon, Button)
+    └── components/ # Reusable atomic UI components
 ```
+
+### Features (`src/features/`)
+
+Each feature is a self-contained module with screens, components, and optional local hooks. Route files in `src/app/` stay thin — they only import and re-export screen components from features. See `src/features/README.md` for full conventions.
+
+```
+features/posts/
+├── screens/            # Screen components (entry points)
+│   └── PostsScreen/
+├── components/         # Feature-specific UI components
+│   └── PostCard/
+├── hooks/              # (optional) Feature-local hooks
+├── types.ts            # (optional) Shared feature types
+└── index.ts
+```
+
+### Component Structure
+
+Every component (in `features/`, `ui/components/`, anywhere) is a **folder**:
+
+```
+ComponentName/
+├── ComponentName.tsx
+├── types.ts            # Props, local enums (or ComponentName.types.ts)
+└── index.ts            # Barrel re-export
+```
+
+Types are always extracted into a separate file next to the component, never inline.
 
 ### State Management
 
@@ -209,13 +238,25 @@ SVGs are imported as React components via `react-native-svg-transformer`. Use th
 
 ## Conventions
 
-| Rule                        | Description                                               |
-| --------------------------- | --------------------------------------------------------- |
-| One store per file          | `use[Name]Store.ts` — see `src/store/README.md`           |
-| One query hook per resource | `use[Resource]Query.ts` — see `src/hooks/query/README.md` |
-| Re-export from index        | Every folder has an `index.ts` barrel file                |
-| Selectors only              | Never subscribe to the whole Zustand store                |
-| Typed routes                | All routes are type-safe via Expo Router                  |
+| Rule                        | Description                                                        |
+| --------------------------- | ------------------------------------------------------------------ |
+| Thin route files            | `app/` only imports screens from `features/` — no logic            |
+| Component = folder          | Every component is a folder with `.tsx`, `types.ts`, `index.ts`    |
+| Types next to component     | Props and local enums in `types.ts` beside the component           |
+| One store per file          | `use[Name]Store.ts` — see `src/store/README.md`                    |
+| One query hook per resource | `use[Resource]Query.ts` — see `src/hooks/query/README.md`          |
+| Re-export from index        | Every folder has an `index.ts` barrel file                         |
+| Selectors only              | Never subscribe to the whole Zustand store                         |
+| Typed routes                | All routes are type-safe via Expo Router                           |
+| Feature-local hooks         | Keep in `features/[name]/hooks/`; move to `src/hooks/` when reused |
+
+### Types Location
+
+| Scope                             | Location                                          |
+| --------------------------------- | ------------------------------------------------- |
+| Global (API contracts, enums)     | `src/types/`                                      |
+| Component props, local enums      | `types.ts` or `[Name].types.ts` next to component |
+| Shared between feature components | `features/[name]/types.ts`                        |
 
 ### Environment Validation
 

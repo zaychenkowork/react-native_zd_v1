@@ -1,9 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-type ErrorFallbackProps = {
-  error: Error;
-  onRetry?: () => void;
-};
+import type { ErrorFallbackProps } from './types';
 
 export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
   return (
