@@ -16,15 +16,17 @@ Expo-based React Native template with TypeScript, file-based routing, and a scal
 | Forms        | React Hook Form v7              |
 | Storage      | MMKV                            |
 | Animations   | Reanimated v4                   |
+| Build        | EAS Build + local prebuild      |
 
 ## Quick Start
 
 ### Prerequisites
 
-- Node.js >= 18
+- Node.js >= 20 (see `.nvmrc`)
 - Yarn
-- [Expo CLI](https://docs.expo.dev/get-started/installation/)
-- iOS Simulator (macOS) or Android Emulator
+- [EAS CLI](https://docs.expo.dev/build/setup/) (`npm install -g eas-cli`)
+- macOS: Xcode + CocoaPods (for iOS builds)
+- Android Studio + JDK 17 (for Android builds)
 
 ### Installation
 
@@ -40,13 +42,132 @@ Copy the example env file and fill in the values:
 cp .env.example .env
 ```
 
-### Run the App
+| Variable                | Description                                  | Example                   |
+| ----------------------- | -------------------------------------------- | ------------------------- |
+| `EXPO_PUBLIC_RUN_MODE`  | App environment                              | `dev` / `stg` / `prod`    |
+| `EXPO_PUBLIC_API_URL`   | API base URL                                 | `https://api.example.com` |
+| `STRICT_ENV_VALIDATION` | Enable strict Zod validation before prebuild | `true` / `false`          |
+
+## Running the App
+
+### Development (Expo Go / Dev Client)
 
 ```bash
-yarn start        # Start Expo dev server
-yarn ios          # Run on iOS Simulator
-yarn android      # Run on Android Emulator
+yarn start          # Start Metro dev server
 ```
+
+### Native Build (Dev Client)
+
+Requires prebuild to generate native projects first:
+
+```bash
+yarn prebuild        # Generate ios/ and android/ folders
+yarn prebuild:clean  # Full regeneration from scratch (recommended)
+```
+
+Then run on device/emulator:
+
+```bash
+yarn ios             # Build and run on iOS Simulator
+yarn android         # Build and run on Android Emulator
+```
+
+After the first native build, `yarn start` will use the dev client automatically — no need to rebuild unless you change native dependencies.
+
+## Building for Release
+
+### Local Builds
+
+#### iOS (requires macOS + Xcode)
+
+```bash
+yarn ios:release     # Build Release .app for Simulator
+```
+
+For a signed `.ipa` (App Store / TestFlight):
+
+1. Open `ios/` folder in Xcode
+2. **Product → Archive**
+3. **Distribute App** → choose destination
+
+#### Android
+
+```bash
+yarn android:release       # Build .apk (for direct install / testing)
+yarn android:release:aab   # Build .aab (for Google Play)
+```
+
+Output locations:
+
+| Format | Path                                        |
+| ------ | ------------------------------------------- |
+| `.apk` | `android/app/build/outputs/apk/release/`    |
+| `.aab` | `android/app/build/outputs/bundle/release/` |
+
+> For production Android builds, you need a signing keystore. See [Android signing docs](https://developer.android.com/studio/publish/app-signing).
+
+### EAS Build (Cloud)
+
+EAS Build compiles native projects in the cloud — no local Xcode or Android SDK required for iOS/Android builds.
+
+#### Initial Setup (one time)
+
+```bash
+# 1. Install EAS CLI globally
+npm install -g eas-cli
+
+# 2. Log in to your Expo account
+eas login
+```
+
+Before initializing, update `app.config.ts` with your real values:
+
+- `EXPO_ACCOUNT_OWNER` — your Expo account username
+- `EAS_PROJECT_ID` — your Expo project ID
+
+```bash
+# 3. Initialize the project (links to Expo servers)
+eas init
+```
+
+#### Build Profiles
+
+Configured in `eas.json`:
+
+| Profile                 | Purpose                       | Env    | Distribution |
+| ----------------------- | ----------------------------- | ------ | ------------ |
+| `development`           | Dev client on physical device | `dev`  | internal     |
+| `development-simulator` | Dev client on iOS Simulator   | `dev`  | internal     |
+| `preview`               | Staging build for testers     | `stg`  | internal     |
+| `production`            | Release build for app stores  | `prod` | store        |
+
+#### Build Commands
+
+```bash
+# Development builds
+yarn eas:dev:ios            # Dev client → physical iPhone
+yarn eas:dev:android        # Dev client → physical Android
+yarn eas:dev:simulator      # Dev client → iOS Simulator
+
+# Preview / Staging builds
+yarn eas:preview:ios        # Staging build → iOS (internal)
+yarn eas:preview:android    # Staging build → Android .apk (internal)
+
+# Production builds
+yarn eas:prod:ios           # Production → iOS .ipa
+yarn eas:prod:android       # Production → Android .aab
+```
+
+#### Publishing to Stores
+
+##### Option 1: Build + auto-submit
+
+```bash
+yarn eas:prod:ios:submit       # Build iOS + upload to App Store Connect
+yarn eas:prod:android:submit   # Build Android + upload to Google Play
+```
+
+##### Store Requirements
 
 ## Project Structure
 
@@ -94,10 +215,25 @@ SVGs are imported as React components via `react-native-svg-transformer`. Use th
 
 Environment variables are validated at build time via Zod schema (`src/schemas/env.ts`). Direct access to `process.env` is blocked by an ESLint rule — use `CONFIG` from `@/config` instead.
 
-## Environment Variables
+## All Scripts Reference
 
-| Variable                | Description                                  | Example                   |
-| ----------------------- | -------------------------------------------- | ------------------------- |
-| `EXPO_PUBLIC_RUN_MODE`  | App environment                              | `dev` / `stg` / `prod`    |
-| `EXPO_PUBLIC_API_URL`   | API base URL                                 | `https://api.example.com` |
-| `STRICT_ENV_VALIDATION` | Enable strict Zod validation before prebuild | `true` / `false`          |
+| Script                         | Description                                     |
+| ------------------------------ | ----------------------------------------------- |
+| `yarn start`                   | Start Metro dev server                          |
+| `yarn lint`                    | Run ESLint                                      |
+| `yarn prebuild`                | Generate native ios/ and android/ folders       |
+| `yarn prebuild:clean`          | Clean regeneration of native folders            |
+| `yarn ios`                     | Build and run on iOS Simulator (debug)          |
+| `yarn android`                 | Build and run on Android (debug)                |
+| `yarn ios:release`             | Local iOS release build                         |
+| `yarn android:release`         | Local Android release .apk                      |
+| `yarn android:release:aab`     | Local Android release .aab (Google Play)        |
+| `yarn eas:dev:ios`             | EAS: dev client → iOS device                    |
+| `yarn eas:dev:android`         | EAS: dev client → Android device                |
+| `yarn eas:dev:simulator`       | EAS: dev client → iOS Simulator                 |
+| `yarn eas:preview:ios`         | EAS: staging → iOS (internal)                   |
+| `yarn eas:preview:android`     | EAS: staging → Android .apk (internal)          |
+| `yarn eas:prod:ios`            | EAS: production → iOS .ipa                      |
+| `yarn eas:prod:android`        | EAS: production → Android .aab                  |
+| `yarn eas:prod:ios:submit`     | EAS: production iOS + submit to App Store       |
+| `yarn eas:prod:android:submit` | EAS: production Android + submit to Google Play |

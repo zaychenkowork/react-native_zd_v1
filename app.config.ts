@@ -21,8 +21,8 @@ const appIconBadgeConfig: AppIconBadgeConfig = {
   ],
 };
 
-const EXPO_ACCOUNT_OWNER = 'testexpo-owner';
-const EAS_PROJECT_ID = 'testexpo-owner';
+const EXPO_ACCOUNT_OWNER = 'dz.work';
+const EAS_PROJECT_ID = '996dc461-0d90-42f4-80f5-b690b2340268';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -31,7 +31,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   owner: EXPO_ACCOUNT_OWNER,
 
   scheme: Env.EXPO_PUBLIC_SCHEME,
-  slug: 'react-native_zd_v1',
+  slug: 'test-teamplate',
 
   version: Env.EXPO_PUBLIC_VERSION.toString(),
 
@@ -57,6 +57,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     'expo-router',
+    [
+      'expo-dev-client',
+      {
+        launchMode: 'most-recent',
+      },
+    ],
     [
       'expo-splash-screen',
       {

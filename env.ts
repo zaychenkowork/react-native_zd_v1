@@ -8,15 +8,15 @@ const EXPO_PUBLIC_RUN_MODE = (process.env.EXPO_PUBLIC_RUN_MODE ??
   'dev') as EnvType['EXPO_PUBLIC_RUN_MODE'];
 
 const BUNDLE_IDS = {
-  dev: 'com.testexpo-owner.dev',
-  stg: 'com.testexpo-owner.stg',
-  prod: 'com.testexpo-owner',
+  dev: 'com.testexpoowner.dev',
+  stg: 'com.testexpoowner.stg',
+  prod: 'com.testexpoowner',
 } as const;
 
 const PACKAGES = {
-  dev: 'com.testexpo-owner.dev',
-  stg: 'com.testexpo-owner.stg',
-  prod: 'com.testexpo-owner',
+  dev: 'com.testexpoowner.dev',
+  stg: 'com.testexpoowner.stg',
+  prod: 'com.testexpoowner',
 } as const;
 
 const SCHEMES = {

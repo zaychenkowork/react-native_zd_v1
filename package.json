@@ -4,9 +4,26 @@
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "lint": "expo lint"
+    "lint": "expo lint",
+
+    "prebuild": "expo prebuild",
+    "prebuild:clean": "expo prebuild --clean",
+
+    "ios": "expo run:ios",
+    "android": "expo run:android",
+    "ios:release": "expo run:ios --configuration Release",
+    "android:release": "cd android && ./gradlew assembleRelease",
+    "android:release:aab": "cd android && ./gradlew bundleRelease",
+
+    "eas:dev:ios": "eas build --profile development --platform ios",
+    "eas:dev:android": "eas build --profile development --platform android",
+    "eas:dev:simulator": "eas build --profile development-simulator --platform ios",
+    "eas:preview:ios": "eas build --profile preview --platform ios",
+    "eas:preview:android": "eas build --profile preview --platform android",
+    "eas:prod:ios": "eas build --profile production --platform ios",
+    "eas:prod:android": "eas build --profile production --platform android",
+    "eas:prod:ios:submit": "eas build --profile production --platform ios --auto-submit",
+    "eas:prod:android:submit": "eas build --profile production --platform android --auto-submit"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.21",
@@ -14,6 +31,7 @@
     "axios": "^1.13.5",
     "expo": "~54.0.33",
     "expo-constants": "~18.0.13",
+    "expo-dev-client": "~6.0.20",
     "expo-linking": "~8.0.11",
     "expo-router": "~6.0.23",
     "expo-splash-screen": "~31.0.13",
