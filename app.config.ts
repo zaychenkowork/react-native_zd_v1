@@ -53,6 +53,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       foregroundImage: './assets/adaptive-icon.png',
     },
     edgeToEdgeEnabled: true,
+    package: Env.EXPO_PUBLIC_PACKAGE,
   },
   plugins: [
     'expo-router',

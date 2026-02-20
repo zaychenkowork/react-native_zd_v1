@@ -24,7 +24,6 @@
     "docs",
     "cli",
     "android",
-    "ios",
-    "lint-staged.config.js"
+    "ios"
   ]
 }
