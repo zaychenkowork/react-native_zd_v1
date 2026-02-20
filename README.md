@@ -164,7 +164,7 @@ yarn eas:prod:android       # Production → Android .aab
 
 #### Publishing to Stores
 
-##### Option 1: Build + auto-submit
+##### Build + auto-submit
 
 ```bash
 yarn eas:prod:ios:submit       # Build iOS + upload to App Store Connect
@@ -180,7 +180,9 @@ src/
 ├── api/            # Axios instance and API methods
 ├── app/            # Expo Router screens and layouts
 ├── config/         # App config (env values, query defaults)
+├── constants/      # Shared constants (storage keys, etc.)
 ├── hooks/          # Custom hooks
+│   ├── app/        # App lifecycle hooks (ready, focus, online)
 │   └── query/      # React Query hooks (fetch, mutate)
 ├── lib/            # Utilities (storage, env validation)
 ├── providers/      # React context providers
@@ -217,7 +219,7 @@ SVGs are imported as React components via `react-native-svg-transformer`. Use th
 
 ### Environment Validation
 
-Environment variables are validated at build time via Zod schema (`src/schemas/env.ts`). Direct access to `process.env` is blocked by an ESLint rule — use `CONFIG` from `@/config` instead.
+Environment variables are validated at build time via Zod schema (`src/schemas/env.ts`). Direct access to `process.env` is blocked by an ESLint rule — use `Env` from `env.ts` (for `app.config.ts`) or `CONFIG` from `@/config` (for app code) instead.
 
 ## All Scripts Reference
 

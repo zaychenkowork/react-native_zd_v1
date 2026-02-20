@@ -6,7 +6,6 @@ const eslintConfigPrettier = require('eslint-config-prettier/flat');
 module.exports = defineConfig([
   expoConfig,
   ...queryPlugin.configs['flat/recommended'],
-  ignorePatterns: ['scripts/**/*.js'],
   {
     rules: {
       'no-restricted-syntax': [
@@ -28,6 +27,6 @@ module.exports = defineConfig([
   },
   eslintConfigPrettier,
   {
-    ignores: ['dist/*'],
+    ignores: ['dist/*', 'scripts/**/*.js'],
   },
 ]);
