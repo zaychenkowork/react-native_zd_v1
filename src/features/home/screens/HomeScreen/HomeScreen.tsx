@@ -1,16 +1,25 @@
+import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAuthStore } from '@/store';
 
 export function HomeScreen() {
+  const { t } = useTranslation();
   const signOut = useAuthStore((s) => s.signOut);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Home</Text>
-      <Text style={styles.subtitle}>You are authenticated</Text>
-      <Pressable style={styles.button} onPress={signOut}>
-        <Text style={styles.buttonText}>Sign Out</Text>
+      <Text accessibilityRole="header" style={styles.title}>
+        {t('home.title')}
+      </Text>
+      <Text style={styles.subtitle}>{t('home.subtitle')}</Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('auth.signOut')}
+        style={styles.button}
+        onPress={signOut}
+      >
+        <Text style={styles.buttonText}>{t('auth.signOut')}</Text>
       </Pressable>
     </View>
   );

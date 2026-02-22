@@ -7,11 +7,18 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
   const { t } = useTranslation();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{t('errors.unknown')}</Text>
+    <View accessibilityRole="alert" style={styles.container}>
+      <Text accessibilityRole="header" style={styles.title}>
+        {t('errors.unknown')}
+      </Text>
       <Text style={styles.message}>{error.message}</Text>
       {onRetry && (
-        <Pressable style={styles.button} onPress={onRetry}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('errors.tryAgain')}
+          style={styles.button}
+          onPress={onRetry}
+        >
           <Text style={styles.buttonText}>{t('errors.tryAgain')}</Text>
         </Pressable>
       )}

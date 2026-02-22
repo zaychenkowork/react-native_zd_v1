@@ -1,8 +1,10 @@
+import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAuthStore } from '@/store';
 
 export function SignInScreen() {
+  const { t } = useTranslation();
   const signIn = useAuthStore((s) => s.signIn);
 
   const handleSignIn = () => {
@@ -11,10 +13,17 @@ export function SignInScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome</Text>
-      <Text style={styles.subtitle}>Sign in to continue</Text>
-      <Pressable style={styles.button} onPress={handleSignIn}>
-        <Text style={styles.buttonText}>Sign In</Text>
+      <Text accessibilityRole="header" style={styles.title}>
+        {t('auth.welcomeTitle')}
+      </Text>
+      <Text style={styles.subtitle}>{t('auth.welcomeSubtitle')}</Text>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel={t('auth.signIn')}
+        style={styles.button}
+        onPress={handleSignIn}
+      >
+        <Text style={styles.buttonText}>{t('auth.signIn')}</Text>
       </Pressable>
     </View>
   );

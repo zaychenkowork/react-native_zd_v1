@@ -258,6 +258,26 @@ SVGs are imported as React components via `react-native-svg-transformer`. Use th
 | Component props, local enums      | `types.ts` or `[Name].types.ts` next to component |
 | Shared between feature components | `features/[name]/types.ts`                        |
 
+### Accessibility
+
+All interactive and semantic elements can include accessibility props. Use i18n keys for labels so screen readers work in every supported language.
+
+| Prop                 | When to use                                                                | Example                                     |
+| -------------------- | -------------------------------------------------------------------------- | ------------------------------------------- |
+| `accessibilityRole`  | Every interactive or semantic element                                      | `"button"`, `"header"`, `"alert"`, `"link"` |
+| `accessibilityLabel` | Buttons / icons without visible text, or when visible text is insufficient | `accessibilityLabel={t('auth.signIn')}`     |
+| `accessibilityHint`  | When the action result isn't obvious from the label                        | `"Navigates to settings screen"`            |
+
+```tsx
+<Pressable
+  accessibilityRole="button"
+  accessibilityLabel={t('auth.signIn')}
+  onPress={handleSignIn}
+>
+  <Text>…</Text>
+</Pressable>
+```
+
 ### Environment Validation
 
 Environment variables are validated at build time via Zod schema (`src/schemas/env.ts`). Direct access to `process.env` is blocked by an ESLint rule — use `Env` from `env.ts` (for `app.config.ts`) or `CONFIG` from `@/config` (for app code) instead.

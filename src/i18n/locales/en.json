@@ -10,7 +10,13 @@
     "signIn": "Sign In",
     "signOut": "Sign Out",
     "email": "Email",
-    "password": "Password"
+    "password": "Password",
+    "welcomeTitle": "Welcome",
+    "welcomeSubtitle": "Sign in to continue"
+  },
+  "home": {
+    "title": "Home",
+    "subtitle": "You are authenticated"
   },
   "errors": {
     "network": "No internet connection",
