@@ -236,6 +236,45 @@ Types are always extracted into a separate file next to the component, never inl
 
 SVGs are imported as React components via `react-native-svg-transformer`. Use the `<Icon>` component with the icon registry in `src/ui/assets/icons/`.
 
+## Code Quality & Git Hooks
+
+### Pre-commit (husky + lint-staged)
+
+On every `git commit`, staged files are automatically processed:
+
+| File pattern  | Actions                             |
+| ------------- | ----------------------------------- |
+| `*.{ts,tsx}`  | `eslint --fix` → `prettier --write` |
+| `*.{js,jsx}`  | `eslint --fix` → `prettier --write` |
+| `*.{json,md}` | `prettier --write`                  |
+
+If ESLint finds errors it can't auto-fix, the commit is blocked.
+
+Config: `.lintstagedrc.json`
+
+### Commit Message (commitlint)
+
+All commit messages must follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/):
+
+```
+<type>(optional scope): <description>
+```
+
+Allowed types: `feat`, `fix`, `chore`, `refactor`, `docs`, `style`, `test`, `perf`, `build`, `ci`, `revert`
+
+```bash
+# ✅ Good
+feat(auth): add sign in with Apple
+fix(api): handle 401 on token refresh
+chore: update dependencies
+
+# ❌ Bad
+added new screen        # no type
+feat: Added new screen. # past tense + period
+```
+
+Header max length: **150 characters**. Config: `commitlint.config.js`
+
 ## Conventions
 
 | Rule                        | Description                                                        |
