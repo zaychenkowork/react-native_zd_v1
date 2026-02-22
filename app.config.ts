@@ -83,7 +83,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     typedRoutes: true,
   },
   extra: {
-    supportsRTL: true,
+    // supportsRTL: true,
     eas: {
       projectId: EAS_PROJECT_ID,
     },
