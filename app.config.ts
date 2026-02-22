@@ -1,7 +1,7 @@
+import 'tsx/cjs';
+
 import type { AppIconBadgeConfig } from 'app-icon-badge/types';
 import type { ConfigContext, ExpoConfig } from 'expo/config';
-
-import 'tsx/cjs';
 
 import Env from './env';
 
@@ -58,6 +58,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   plugins: [
     'expo-router',
     [
+      'expo-localization',
+      {
+        supportedLocales: ['en', 'uk'],
+      },
+    ],
+    [
       'expo-dev-client',
       {
         launchMode: 'most-recent',
@@ -77,6 +83,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     typedRoutes: true,
   },
   extra: {
+    supportsRTL: true,
     eas: {
       projectId: EAS_PROJECT_ID,
     },

@@ -1,0 +1,25 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "save": "Save",
+    "back": "Back"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "email": "Email",
+    "password": "Password"
+  },
+  "errors": {
+    "network": "No internet connection",
+    "unknown": "Something went wrong",
+    "tryAgain": "Try Again"
+  },
+  "validation": {
+    "required": "This field is required",
+    "emailInvalid": "Invalid email address",
+    "passwordMin": "Password must be at least {{min}} characters"
+  }
+}

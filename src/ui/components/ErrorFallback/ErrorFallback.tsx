@@ -1,15 +1,18 @@
+import { useTranslation } from 'react-i18next';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import type { ErrorFallbackProps } from './types';
 
 export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
+  const { t } = useTranslation();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Something went wrong</Text>
+      <Text style={styles.title}>{t('errors.unknown')}</Text>
       <Text style={styles.message}>{error.message}</Text>
       {onRetry && (
         <Pressable style={styles.button} onPress={onRetry}>
-          <Text style={styles.buttonText}>Try Again</Text>
+          <Text style={styles.buttonText}>{t('errors.tryAgain')}</Text>
         </Pressable>
       )}
     </View>
