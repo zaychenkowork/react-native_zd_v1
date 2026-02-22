@@ -4,7 +4,8 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@env": ["env.ts"]
+      "@env": ["env.ts"],
+      "@tests/*": ["./__tests__/*"]
     },
     "checkJs": true,
     "strict": true,

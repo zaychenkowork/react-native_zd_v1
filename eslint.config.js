@@ -71,6 +71,12 @@ module.exports = defineConfig([
   },
   eslintConfigPrettier,
   {
+    files: ['__tests__/**/*.{ts,tsx}'],
+    rules: {
+      'import/no-unresolved': ['error', { ignore: ['^@tests/'] }],
+    },
+  },
+  {
     ignores: ['dist/*', 'scripts/**/*.js'],
   },
 ]);
