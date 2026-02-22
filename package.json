@@ -21,7 +21,8 @@
     "eas:prod:android": "eas build --profile production --platform android",
     "eas:prod:ios:submit": "eas build --profile production --platform ios --auto-submit",
     "eas:prod:android:submit": "eas build --profile production --platform android --auto-submit",
-    "android:setup": "node scripts/setup-android-sdk.js"
+    "android:setup": "node scripts/setup-android-sdk.js",
+    "prepare": "husky"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.21",
@@ -54,6 +55,8 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.4.2",
+    "@commitlint/config-conventional": "^20.4.2",
     "@dev-plugins/react-query": "^0.4.0",
     "@tanstack/eslint-plugin-query": "^5.91.4",
     "@types/react": "~19.1.0",
@@ -61,6 +64,9 @@
     "eslint-config-expo": "~10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^3.8.1",
     "tsx": "^4.21.0",
     "typescript": "~5.9.2"
   },
