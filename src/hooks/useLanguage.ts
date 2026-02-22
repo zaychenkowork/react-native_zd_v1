@@ -1,13 +1,12 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { I18nManager, Platform } from 'react-native';
+import { I18nManager } from 'react-native';
 import { useMMKVString } from 'react-native-mmkv';
 
 import { storage } from '@/utils/storage';
 
 import { STORAGE_KEYS } from '@/constants';
 
-import { RTL_LANGUAGES } from '@/i18n';
 import type { Language } from '@/i18n/resources';
 import { supportedLanguages } from '@/i18n/resources';
 
@@ -29,19 +28,19 @@ export function useLanguage(onDirectionChange?: () => void) {
 
   const changeLanguage = useCallback(
     (lng: Language) => {
-      const needsRTL = RTL_LANGUAGES.has(lng);
-      const directionChanged = needsRTL !== I18nManager.isRTL;
-
       i18n.changeLanguage(lng);
+
+      // const shouldBeRTL = i18n.dir() === 'rtl';
+
       setStoredLanguage(lng);
 
-      if (directionChanged && Platform.OS !== 'web') {
-        I18nManager.allowRTL(needsRTL);
-        I18nManager.forceRTL(needsRTL);
-        onDirectionChange?.();
-      }
+      // if (shouldBeRTL !== I18nManager.isRTL && Platform.OS !== 'web') {
+      //   I18nManager.allowRTL(shouldBeRTL);
+      //   I18nManager.forceRTL(shouldBeRTL);
+      //   onDirectionChange?.();
+      // }
     },
-    [i18n, setStoredLanguage, onDirectionChange],
+    [i18n, setStoredLanguage],
   );
 
   return { currentLanguage, isRTL, changeLanguage, supportedLanguages };
