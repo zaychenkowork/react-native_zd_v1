@@ -1,6 +1,7 @@
 import '@/i18n';
 
 import Bugsnag from '@bugsnag/expo';
+import BugsnagPerformance from '@bugsnag/expo-performance';
 import { type ErrorBoundaryProps, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -21,7 +22,7 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   return <ErrorFallback error={error} onRetry={retry} />;
 }
 
-export default function RootLayout() {
+function RootLayout() {
   const isReady = useAppReady();
 
   if (!isReady) return null;
@@ -51,3 +52,5 @@ function RootNavigator() {
     </Stack>
   );
 }
+
+export default BugsnagPerformance.withInstrumentedAppStarts(RootLayout);

@@ -13,6 +13,8 @@ const config = {
 
   moduleNameMapper: {
     '^@bugsnag/expo$': '<rootDir>/__tests__/setup/mocks/bugsnag.ts',
+    '^@bugsnag/expo-performance$':
+      '<rootDir>/__tests__/setup/mocks/bugsnag-performance.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@env$': '<rootDir>/env.ts',
     '^env$': '<rootDir>/env.ts',

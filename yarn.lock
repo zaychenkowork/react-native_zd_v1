@@ -1112,6 +1112,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@bugsnag/core-performance@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@bugsnag/core-performance@npm:3.2.0"
+  dependencies:
+    "@bugsnag/cuid": "npm:^3.1.1"
+  checksum: 10c0/c273f48664d5ee0bf64c9fdf7adea98561d763c7953d7703ca942e1d47a815057b83f8c2e575fe5be1511fcadd682a0493c661a9606a6b9c262864aee63c0d59
+  languageName: node
+  linkType: hard
+
 "@bugsnag/core@npm:^8.2.0, @bugsnag/core@npm:^8.8.0":
   version: 8.8.0
   resolution: "@bugsnag/core@npm:8.8.0"
@@ -1141,6 +1150,28 @@ __metadata:
     expo-crypto: ~15.0.6
     expo-file-system: ~19.0.11
   checksum: 10c0/bcc6575332fde89bfc615c74e7acd1cdb991511bf9dc97c1841fe211caebdc572d81c7a1afd4c0bc7b2a113b89a6589ee59a39004c0ec06758db230b760f0a4b
+  languageName: node
+  linkType: hard
+
+"@bugsnag/delivery-fetch-performance@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@bugsnag/delivery-fetch-performance@npm:3.2.0"
+  dependencies:
+    "@bugsnag/core-performance": "npm:^3.2.0"
+  checksum: 10c0/167b97073ebf6ee25425b9b51d329eb1363c62c61590b6fceda2fcf9ee3fbbcc02ec8be57fa205ae56a4798b97f404233aa525eec00815ee4aab6184f8da6ac0
+  languageName: node
+  linkType: hard
+
+"@bugsnag/expo-performance@npm:^54.0.0":
+  version: 54.0.0
+  resolution: "@bugsnag/expo-performance@npm:54.0.0"
+  dependencies:
+    "@bugsnag/react-native-performance": "npm:^3.3.0"
+  peerDependencies:
+    expo: ^54.0.0
+    expo-constants: ~18.0.8
+    react: "*"
+  checksum: 10c0/d8c8ee6188ad45f93563f3cb490dae7024b7649a90c43877152955677e2a876d20374f5e2324de819af19ef40d4bc5fae0bea1412bac65991fc3ea336c642d71
   languageName: node
   linkType: hard
 
@@ -1293,6 +1324,31 @@ __metadata:
     "@bugsnag/core":
       optional: true
   checksum: 10c0/65507fb3232289c8d83efa2d91d4d120f44cf4cb10020f9aba54ab7f25adaa321ba1c54f0c03ca79cefcadb88fd5c78ec46f2bf76d6bc8aacbbd863963021caa
+  languageName: node
+  linkType: hard
+
+"@bugsnag/react-native-performance@npm:^3.3.0":
+  version: 3.4.1
+  resolution: "@bugsnag/react-native-performance@npm:3.4.1"
+  dependencies:
+    "@bugsnag/core-performance": "npm:^3.2.0"
+    "@bugsnag/cuid": "npm:^3.1.1"
+    "@bugsnag/delivery-fetch-performance": "npm:^3.2.0"
+    "@bugsnag/request-tracker-performance": "npm:^3.2.0"
+  peerDependencies:
+    "@react-native-community/netinfo": ">= 9.4.1"
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/5097846497770adae8ddc2234218d5a5f79c02d1153fea7011917ddb4bb7932431dddfbf196ebe3605bad4e9624943880c7677133da7c043a1f17489b014c1e3
+  languageName: node
+  linkType: hard
+
+"@bugsnag/request-tracker-performance@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "@bugsnag/request-tracker-performance@npm:3.2.0"
+  dependencies:
+    "@bugsnag/core-performance": "npm:^3.2.0"
+  checksum: 10c0/88e52256bc6612cd81fdb0c3ec806e137e8577e84ad9b6c1a4e4743bcdee40a9d5edcf12031397678747c185dc07e9bbdc3c301ca95fe6293ba339996aed7a8a
   languageName: node
   linkType: hard
 
@@ -12717,6 +12773,7 @@ __metadata:
   resolution: "react-native_zd_v1@workspace:."
   dependencies:
     "@bugsnag/expo": "npm:^54.0.0"
+    "@bugsnag/expo-performance": "npm:^54.0.0"
     "@bugsnag/plugin-expo-eas-sourcemaps": "npm:^54.0.0"
     "@bugsnag/source-maps": "npm:^2.3.3"
     "@commitlint/cli": "npm:^20.4.2"
