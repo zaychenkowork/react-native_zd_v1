@@ -262,6 +262,12 @@ On first launch the theme follows the device color scheme. Once the user picks a
 
 Docs: [Unistyles v3](https://unistyl.es/v3/start/getting-started) · [Theming](https://unistyl.es/v3/guides/theming) · [Dynamic Functions](https://unistyl.es/v3/references/dynamic-functions)
 
+### Localization (i18n)
+
+Translation files live in `src/i18n/locales/`. Supported languages are declared in `src/i18n/resources.ts`. The resolved language is persisted in MMKV so the user's choice survives restarts. Switch language at runtime with `useLanguage().changeLanguage(lng)`.
+
+> **RTL:** RTL direction switching is not enabled — no RTL languages are configured yet. When adding an RTL language (e.g. Arabic, Hebrew), uncomment the direction logic in `src/i18n/index.ts` and `src/hooks/useLanguage.ts`. Direction changes require a JS reload; use `expo-updates` for an OTA reload or prompt the user to restart manually.
+
 ### SVG Icons
 
 SVGs are imported as React components via `react-native-svg-transformer`. Use the `<Icon>` component with the icon registry in `src/ui/assets/icons/`.
@@ -424,6 +430,9 @@ Environment variables are validated at build time via Zod schema (`src/schemas/e
 | ------------------------------ | ----------------------------------------------- |
 | `yarn start`                   | Start Metro dev server                          |
 | `yarn lint`                    | Run ESLint                                      |
+| `yarn type-check`              | TypeScript type check (no emit)                 |
+| `yarn type-check:watch`        | TypeScript type check in watch mode             |
+| `yarn format`                  | Prettier format `src/` and `__tests__/`         |
 | `yarn prebuild`                | Generate native ios/ and android/ folders       |
 | `yarn prebuild:clean`          | Clean regeneration of native folders            |
 | `yarn android:setup`           | Create android/local.properties with SDK path   |
