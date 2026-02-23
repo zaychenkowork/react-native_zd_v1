@@ -23,6 +23,17 @@
     "unknown": "Something went wrong",
     "tryAgain": "Try Again"
   },
+  "playground": {
+    "title": "Playground",
+    "subtitle": "Test styling, themes, and localization",
+    "currentTheme": "Current theme",
+    "language": "Language",
+    "colors": "Colors",
+    "typography": "Typography",
+    "heading": "Heading",
+    "body": "Body text looks like this",
+    "caption": "Caption text"
+  },
   "validation": {
     "required": "This field is required",
     "emailInvalid": "Invalid email address",

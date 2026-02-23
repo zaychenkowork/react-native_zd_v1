@@ -258,7 +258,7 @@ Theme configuration lives in `src/ui/theme/`:
 | `metrics.ts`   | `spacing()`, `radius`, `breakpoints`   |
 | `unistyles.ts` | Unistyles config and type declarations |
 
-Themes are adaptive by default (follow device settings).
+On first launch the theme follows the device color scheme. Once the user picks a theme manually (via `useTheme().setTheme`), the choice is persisted in MMKV and used on subsequent launches.
 
 Docs: [Unistyles v3](https://unistyl.es/v3/start/getting-started) · [Theming](https://unistyl.es/v3/guides/theming) · [Dynamic Functions](https://unistyl.es/v3/references/dynamic-functions)
 

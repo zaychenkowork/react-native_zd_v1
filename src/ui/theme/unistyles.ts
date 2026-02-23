@@ -1,4 +1,11 @@
+import { Appearance } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
+
+import { storage } from '@/utils/storage';
+
+import type { ThemeName } from '@/types';
+
+import { STORAGE_KEYS } from '@/constants';
 
 import { darkColors, lightColors } from './colors';
 import { fontSizes, fontWeights } from './fonts';
@@ -10,8 +17,8 @@ const shared = {
   font: { sizes: fontSizes, weights: fontWeights },
 } as const;
 
-const lightTheme = { colors: lightColors, ...shared };
-const darkTheme = { colors: darkColors, ...shared };
+export const lightTheme = { colors: lightColors, ...shared };
+export const darkTheme = { colors: darkColors, ...shared };
 
 type AppThemes = {
   light: typeof lightTheme;
@@ -27,6 +34,14 @@ declare module 'react-native-unistyles' {
   export interface UnistylesBreakpoints extends AppBreakpoints {}
 }
 
+function resolveInitialTheme(): ThemeName {
+  const saved = storage.getString(STORAGE_KEYS.THEME);
+
+  if (saved === 'light' || saved === 'dark') return saved;
+
+  return Appearance.getColorScheme() ?? 'light';
+}
+
 StyleSheet.configure({
   themes: {
     light: lightTheme,
@@ -34,6 +49,6 @@ StyleSheet.configure({
   },
   breakpoints,
   settings: {
-    adaptiveThemes: true,
+    initialTheme: resolveInitialTheme,
   },
 });

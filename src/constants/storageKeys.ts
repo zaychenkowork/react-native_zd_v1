@@ -1,5 +1,5 @@
 export const STORAGE_KEYS = {
   AUTH_STORAGE: 'auth-storage',
   LANGUAGE: 'app-language',
-  // USER_PREFERENCES: 'user-preferences',
+  THEME: 'app-theme',
 } as const;

@@ -77,6 +77,6 @@ module.exports = defineConfig([
     },
   },
   {
-    ignores: ['dist/*', 'scripts/**/*.js'],
+    ignores: ['dist/*', 'scripts/**/*.js', 'index.ts'],
   },
 ]);

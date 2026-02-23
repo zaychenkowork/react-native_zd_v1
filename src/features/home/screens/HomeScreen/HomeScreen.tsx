@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
@@ -6,6 +7,7 @@ import { useAuthStore } from '@/store';
 
 export function HomeScreen() {
   const { t } = useTranslation();
+  const router = useRouter();
   const signOut = useAuthStore((s) => s.signOut);
 
   return (
@@ -14,14 +16,23 @@ export function HomeScreen() {
         {t('home.title')}
       </Text>
       <Text style={styles.subtitle}>{t('home.subtitle')}</Text>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={t('auth.signOut')}
-        style={styles.button}
-        onPress={signOut}
-      >
-        <Text style={styles.buttonText}>{t('auth.signOut')}</Text>
-      </Pressable>
+      <View style={styles.buttons}>
+        <Pressable
+          accessibilityRole="button"
+          style={styles.button}
+          onPress={() => router.push('/(app)/playground')}
+        >
+          <Text style={styles.buttonText}>{t('playground.title')}</Text>
+        </Pressable>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('auth.signOut')}
+          style={styles.buttonDestructive}
+          onPress={signOut}
+        >
+          <Text style={styles.buttonDestructiveText}>{t('auth.signOut')}</Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -45,13 +56,29 @@ const styles = StyleSheet.create((theme) => ({
     color: theme.colors.mutedForeground,
     marginBottom: theme.spacing(8),
   },
+  buttons: {
+    gap: theme.spacing(3),
+  },
   button: {
+    paddingHorizontal: theme.spacing(8),
+    paddingVertical: theme.spacing(3.5),
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.radius.md,
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: theme.font.sizes.md,
+    fontWeight: theme.font.weights.semibold,
+    color: theme.colors.primaryForeground,
+  },
+  buttonDestructive: {
     paddingHorizontal: theme.spacing(8),
     paddingVertical: theme.spacing(3.5),
     backgroundColor: theme.colors.destructive,
     borderRadius: theme.radius.md,
+    alignItems: 'center',
   },
-  buttonText: {
+  buttonDestructiveText: {
     fontSize: theme.font.sizes.md,
     fontWeight: theme.font.weights.semibold,
     color: theme.colors.destructiveForeground,
