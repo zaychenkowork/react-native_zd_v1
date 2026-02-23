@@ -1,0 +1,35 @@
+{
+  "RN Primitives Unistyles Component": {
+    "prefix": ["rnui", "primitives-ui"],
+    "body": [
+      "import React from 'react';",
+      "import * as ${1:ComponentName}Primitive from '@rn-primitives/${2:package-name}';",
+      "import { StyleSheet } from 'react-native-unistyles';",
+      "",
+      "export const ${1:ComponentName} = React.forwardRef<",
+      "  React.ElementRef<typeof ${1:ComponentName}Primitive.Root>,",
+      "  React.ComponentPropsWithoutRef<typeof ${1:ComponentName}Primitive.Root>",
+      ">(({ style, ...props }, ref) => {",
+      "  return (",
+      "    <${1:ComponentName}Primitive.Root",
+      "      ref={ref}",
+      "      style={[styles.root, style]}",
+      "      {...props}",
+      "    >",
+      "      {props.children}",
+      "    </${1:ComponentName}Primitive.Root>",
+      "  );",
+      "});",
+      "",
+      "${1:ComponentName}.displayName = '${1:ComponentName}';",
+      "",
+      "const styles = StyleSheet.create((theme) => ({",
+      "  root: {",
+      "    $0",
+      "  },",
+      "}));",
+      ""
+    ],
+    "description": "Create a React Native UI Component using rn-primitives and unistyles"
+  }
+}

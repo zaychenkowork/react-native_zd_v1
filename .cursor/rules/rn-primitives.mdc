@@ -1,0 +1,48 @@
+---
+description: Rule for creating UI components using rn-primitives and react-native-unistyles
+globs: src/components/ui/*.tsx
+---
+# React Native UI Components
+
+When generating UI components for this project, always use the Headless UI approach combining `@rn-primitives/*` and `react-native-unistyles`.
+
+## Guidelines
+
+1. **Location:** All custom primitive-based UI components must be placed in `src/components/ui/`.
+2. **Wrapper:** Wrap `rn-primitives` components using `React.forwardRef`.
+3. **Styling:** Import `StyleSheet` from `react-native-unistyles` (do NOT use `useStyles` or `createStyleSheet`).
+4. **Style Definition:** Define styles at the bottom of the file using `const styles = StyleSheet.create((theme) => ({ ... }))`.
+5. **Types:** Expose necessary props and extend `React.ComponentPropsWithoutRef<typeof Primitive.Root>`.
+6. **Props merging:** Always merge passed `style` prop with your custom unistyles root style `[styles.root, style]`.
+
+## Component Template
+
+```tsx
+import React from 'react';
+import * as ComponentPrimitive from '@rn-primitives/component-name';
+import { StyleSheet } from 'react-native-unistyles';
+
+export const Component = React.forwardRef<
+  React.ElementRef<typeof ComponentPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ComponentPrimitive.Root>
+>(({ style, ...props }, ref) => {
+  return (
+    <ComponentPrimitive.Root
+      ref={ref}
+      style={[styles.root, style]}
+      {...props}
+    >
+      {/* Internal components / indicators go here */}
+      {props.children}
+    </ComponentPrimitive.Root>
+  );
+});
+
+Component.displayName = 'Component';
+
+const styles = StyleSheet.create((theme) => ({
+  root: {
+    // Base styling here
+  },
+}));
+```
