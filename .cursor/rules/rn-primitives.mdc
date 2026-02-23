@@ -1,48 +1,233 @@
 ---
-description: Rule for creating UI components using rn-primitives and react-native-unistyles
-globs: src/components/ui/*.tsx
+description: Use when creating, editing, or discussing UI components. Covers: checking local primitives folder, fetching source from reactnativereusables.com, converting NativeWind to Unistyles v3, working with design screens, and asking clarifying questions before coding.
+globs: src/ui/**/*.tsx
+alwaysApply: false
 ---
-# React Native UI Components
 
-When generating UI components for this project, always use the Headless UI approach combining `@rn-primitives/*` and `react-native-unistyles`.
+# UI Component Workflow
 
-## Guidelines
+## Project structure
 
-1. **Location:** All custom primitive-based UI components must be placed in `src/components/ui/`.
-2. **Wrapper:** Wrap `rn-primitives` components using `React.forwardRef`.
-3. **Styling:** Import `StyleSheet` from `react-native-unistyles` (do NOT use `useStyles` or `createStyleSheet`).
-4. **Style Definition:** Define styles at the bottom of the file using `const styles = StyleSheet.create((theme) => ({ ... }))`.
-5. **Types:** Expose necessary props and extend `React.ComponentPropsWithoutRef<typeof Primitive.Root>`.
-6. **Props merging:** Always merge passed `style` prop with your custom unistyles root style `[styles.root, style]`.
+```
+src/ui/
+├── primitives/      ← LOCAL components (copied from reactnativereusables + adapted)
+│   ├── checkbox.tsx ← fetched from rnr, NativeWind removed, Unistyles applied
+│   └── index.ts
+├── components/      ← app-level compositions built on top of primitives
+│   ├── FormField/
+│   │   └── index.tsx
+│   └── index.ts
+└── theme/           ← colors, spacing, fonts, breakpoints (read-only reference)
+```
 
-## Component Template
+---
 
-```tsx
-import React from 'react';
-import * as ComponentPrimitive from '@rn-primitives/component-name';
-import { StyleSheet } from 'react-native-unistyles';
+## STEP 1 — Before writing any code, follow this checklist
 
-export const Component = React.forwardRef<
-  React.ElementRef<typeof ComponentPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ComponentPrimitive.Root>
->(({ style, ...props }, ref) => {
-  return (
-    <ComponentPrimitive.Root
-      ref={ref}
-      style={[styles.root, style]}
-      {...props}
-    >
-      {/* Internal components / indicators go here */}
-      {props.children}
-    </ComponentPrimitive.Root>
-  );
-});
+### A. Check local primitives first
 
-Component.displayName = 'Component';
+1. Read `src/ui/primitives/` — if the component already exists, use it from there.
+   - Import as: `@/ui/primitives/<name>`
+   - Never reach back to `@rn-primitives/*` from `src/ui/components/`
 
+2. If the component does NOT exist locally:
+   - Fetch the source from the reactnativereusables GitHub registry:
+     ```
+     https://raw.githubusercontent.com/mrzachnugent/react-native-reusables/main/packages/registry/src/new-york/components/ui/<name>.tsx
+     ```
+   - Adapt it using the NativeWind → Unistyles conversion rules below
+   - Place the adapted file in `src/ui/primitives/<name>.tsx`
+   - Install only the minimum required packages (usually just `@rn-primitives/<name>`)
+
+3. If the component doesn't exist on reactnativereusables either, build it with plain RN primitives (`Pressable`, `View`, `Text`).
+
+### B. When design screens are provided
+
+Study every image in detail before asking anything. Then ask only about what is genuinely unclear:
+
+- All interactive states: default, pressed, focused, disabled, loading, error, success
+- Spacing or dimensions that differ from theme tokens (`src/ui/theme/metrics.ts`)
+- Colors: match to tokens in `src/ui/theme/colors.ts`; ask if a color is not in the theme
+- Typography: match font size/weight to `src/ui/theme/fonts.ts`
+- Corner radius, shadow, border width
+- Animation behavior (does it animate? what kind?)
+- Dark mode variant: is one provided?
+
+**Do NOT write any code until all states and ambiguities are resolved by the user.**
+
+### C. Standard clarifying questions (ask when not obvious)
+
+- Is there a loading / skeleton state?
+- Are there size variants (sm / md / lg)?
+- Are there style variants (primary / secondary / destructive / ghost)?
+- Does it appear in a list (performance considerations)?
+- Should it forward a `ref`?
+
+---
+
+## STEP 2 — NativeWind → Unistyles v3 conversion rules
+
+This project uses `react-native-unistyles` v3. The fetched source will use NativeWind (`className`, `cn()`, `cva`). Convert as follows:
+
+### Imports
+
+```diff
+- import { cn } from '@/lib/utils';
+- import { cva, type VariantProps } from 'class-variance-authority';
++ import { StyleSheet } from 'react-native-unistyles';
+```
+
+### Remove className props
+
+```diff
+- function Checkbox({ className, checkedClassName, ...props }) {
++ function Checkbox({ style, ...props }) {
+```
+
+### Convert className → StyleSheet
+
+```diff
+- <CheckboxPrimitive.Root
+-   className={cn('size-4 border rounded-sm', props.checked && 'bg-primary')}
+- />
++ <CheckboxPrimitive.Root
++   style={[styles.root, style]}
++ />
+
++ const styles = StyleSheet.create((theme) => ({
++   root: {
++     width: 16,
++     height: 16,
++     borderWidth: 1,
++     borderRadius: theme.radius.sm,
++     borderColor: theme.colors.border,
++   },
++ }));
+```
+
+### Convert cva variants
+
+```diff
+- const buttonVariants = cva('...base...', {
+-   variants: {
+-     variant: { default: 'bg-primary', destructive: 'bg-destructive' },
+-     size: { sm: 'h-8 px-3', default: 'h-10 px-4' },
+-   },
+-   defaultVariants: { variant: 'default', size: 'default' },
+- });
+```
+
+Becomes Unistyles variants:
+
+```ts
 const styles = StyleSheet.create((theme) => ({
   root: {
-    // Base styling here
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: theme.radius.md,
+    variants: {
+      variant: {
+        default: { backgroundColor: theme.colors.primary },
+        destructive: { backgroundColor: theme.colors.destructive },
+        ghost: { backgroundColor: 'transparent' },
+      },
+      size: {
+        sm: { height: 32, paddingHorizontal: 12 },
+        default: { height: 40, paddingHorizontal: 16 },
+        lg: { height: 44, paddingHorizontal: 24 },
+      },
+    },
   },
 }));
 ```
+
+And activate variants in the component:
+
+```ts
+styles.useVariants({ variant, size });
+```
+
+### Convert dark mode tokens
+
+NativeWind uses `dark:bg-xxx`. In Unistyles, theming is handled automatically — use the theme callback:
+
+| NativeWind class | Unistyles equivalent |
+|---|---|
+| `bg-primary` | `theme.colors.primary` |
+| `bg-background` | `theme.colors.background` |
+| `text-foreground` | `theme.colors.foreground` |
+| `border-input` | `theme.colors.border` |
+| `text-muted-foreground` | `theme.colors.mutedForeground` |
+| `rounded-md` | `theme.radius.md` |
+| `p-4` | `theme.spacing[4]` |
+| `dark:bg-xxx` | handled by the dark theme automatically |
+
+### Keep these as-is
+
+- `@rn-primitives/*` imports (install the package)
+- `lucide-react-native` icons (if already in project deps, else ask user)
+- `Platform.select()` logic
+- `hitSlop` values
+- `React.forwardRef` pattern
+- `displayName`
+
+---
+
+## STEP 3 — File placement and code rules
+
+| What | Where |
+|---|---|
+| Adapted primitive from rnr | `src/ui/primitives/<name>.tsx` |
+| App-level composition | `src/ui/components/<ComponentName>/index.tsx` |
+| Export from barrel | `src/ui/components/index.ts` or `src/ui/primitives/index.ts` |
+
+**Code rules:**
+- `StyleSheet.create((theme) => ({ ... }))` at the BOTTOM of the file
+- Always `[styles.root, style]` to allow external overrides
+- No `StyleSheet` from `react-native`, no inline styles
+- Always `React.forwardRef` for components that wrap primitives
+- Always set `displayName`
+
+---
+
+## Minimum packages to install
+
+Only install what the specific component actually imports:
+
+```bash
+# The primitive package the component uses
+yarn add @rn-primitives/<name>
+
+# Shared utilities — install once if not yet in project
+yarn add @rn-primitives/types
+```
+
+Do NOT install `nativewind`, `class-variance-authority`, or `tailwind-merge` — those are replaced by Unistyles.
+
+---
+
+## Available components on reactnativereusables.com
+
+```
+accordion      alert-dialog   alert          aspect-ratio   avatar
+badge          button         card           checkbox       collapsible
+context-menu   dialog         dropdown-menu  hover-card     input
+label          menubar        popover        progress       radio-group
+select         separator      skeleton       switch         tabs
+text           textarea       toggle         toggle-group   tooltip
+```
+
+---
+
+## How the user requests a component
+
+Examples of good prompts:
+
+> "Add a Switch component. Check primitives folder first. If not there, fetch from reactnativereusables, adapt to Unistyles, install minimum deps."
+
+> "Build a Button with variants: default, destructive, outline, ghost. Here is the design: [image]. Ask me anything unclear."
+
+> "Add a Select dropdown. Fetch the latest source from rnr, convert className to Unistyles. Only install what's needed."
+
+The AI must follow STEP 1 → STEP 2 → STEP 3 in that order every time.

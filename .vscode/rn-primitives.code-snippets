@@ -1,23 +1,36 @@
 {
-  "RN Primitives Unistyles Component": {
-    "prefix": ["rnui", "primitives-ui"],
+  "RN Primitive Wrapper": {
+    "prefix": ["rnp", "primitive-wrapper"],
+    "body": [
+      "export {",
+      "  Root as ${1:ComponentName}Root,",
+      "  ${2:Indicator} as ${1:ComponentName}${2:Indicator},",
+      "} from '@rn-primitives/${3:package-name}';",
+      "",
+      "export type { ${1:ComponentName}RootProps } from '@rn-primitives/${3:package-name}';",
+      ""
+    ],
+    "description": "Primitive wrapper file in src/ui/primitives/<name>.tsx"
+  },
+  "RN Styled Component from Local Primitive": {
+    "prefix": ["rnui", "styled-component"],
     "body": [
       "import React from 'react';",
-      "import * as ${1:ComponentName}Primitive from '@rn-primitives/${2:package-name}';",
       "import { StyleSheet } from 'react-native-unistyles';",
       "",
+      "import { ${1:ComponentName}Root } from '@/ui/primitives/${2:primitive-name}';",
+      "import type { ${1:ComponentName}RootProps } from '@/ui/primitives/${2:primitive-name}';",
+      "",
+      "type Props = ${1:ComponentName}RootProps;",
+      "",
       "export const ${1:ComponentName} = React.forwardRef<",
-      "  React.ElementRef<typeof ${1:ComponentName}Primitive.Root>,",
-      "  React.ComponentPropsWithoutRef<typeof ${1:ComponentName}Primitive.Root>",
+      "  React.ElementRef<typeof ${1:ComponentName}Root>,",
+      "  Props",
       ">(({ style, ...props }, ref) => {",
       "  return (",
-      "    <${1:ComponentName}Primitive.Root",
-      "      ref={ref}",
-      "      style={[styles.root, style]}",
-      "      {...props}",
-      "    >",
+      "    <${1:ComponentName}Root ref={ref} style={[styles.root, style]} {...props}>",
       "      {props.children}",
-      "    </${1:ComponentName}Primitive.Root>",
+      "    </${1:ComponentName}Root>",
       "  );",
       "});",
       "",
@@ -30,6 +43,6 @@
       "}));",
       ""
     ],
-    "description": "Create a React Native UI Component using rn-primitives and unistyles"
+    "description": "Styled component in src/ui/components/<Name>/index.tsx — imports from local primitives folder"
   }
 }
