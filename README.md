@@ -9,6 +9,7 @@ Expo-based React Native template with TypeScript, file-based routing, and a scal
 | Framework    | React Native 0.81 + Expo SDK 54 |
 | Language     | TypeScript (strict mode)        |
 | Navigation   | Expo Router (file-based)        |
+| Styling      | Unistyles v3 (C++ engine)       |
 | Server State | TanStack React Query v5         |
 | Client State | Zustand v5                      |
 | Validation   | Zod v4                          |
@@ -192,7 +193,8 @@ src/
 ├── types/          # Global TypeScript types, enums, API contracts
 └── ui/
     ├── assets/     # Icons (SVG), images, fonts
-    └── components/ # Reusable atomic UI components
+    ├── components/ # Reusable atomic UI components
+    └── theme/      # Unistyles config, colors, fonts, metrics
 ```
 
 ### Features (`src/features/`)
@@ -231,6 +233,34 @@ Types are always extracted into a separate file next to the component, never inl
 | Client state (UI, auth token, preferences) | Zustand         |
 | Form state                                 | React Hook Form |
 | Persistent storage                         | MMKV            |
+
+### Styling (Unistyles v3)
+
+All components use [Unistyles v3](https://unistyl.es/) — a C++ styling engine with zero re-renders on theme/breakpoint changes. Replace `StyleSheet` from `react-native` with `StyleSheet` from `react-native-unistyles`:
+
+```tsx
+import { StyleSheet } from 'react-native-unistyles';
+
+const styles = StyleSheet.create((theme) => ({
+  container: {
+    backgroundColor: theme.colors.background,
+    padding: theme.spacing(4),
+  },
+}));
+```
+
+Theme configuration lives in `src/ui/theme/`:
+
+| File           | Contents                               |
+| -------------- | -------------------------------------- |
+| `colors.ts`    | Light and dark color palettes          |
+| `fonts.ts`     | Font sizes and weights                 |
+| `metrics.ts`   | `spacing()`, `radius`, `breakpoints`   |
+| `unistyles.ts` | Unistyles config and type declarations |
+
+Themes are adaptive by default (follow device settings).
+
+Docs: [Unistyles v3](https://unistyl.es/v3/start/getting-started) · [Theming](https://unistyl.es/v3/guides/theming) · [Dynamic Functions](https://unistyl.es/v3/references/dynamic-functions)
 
 ### SVG Icons
 

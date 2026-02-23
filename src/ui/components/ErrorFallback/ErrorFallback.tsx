@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native-unistyles';
 
 import type { ErrorFallbackProps } from './types';
 
@@ -26,35 +27,35 @@ export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
-    backgroundColor: '#fff',
+    padding: theme.spacing(6),
+    backgroundColor: theme.colors.background,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 8,
+    fontSize: theme.font.sizes.lg,
+    fontWeight: theme.font.weights.semibold,
+    color: theme.colors.foreground,
+    marginBottom: theme.spacing(2),
   },
   message: {
-    fontSize: 14,
-    color: '#666',
+    fontSize: theme.font.sizes.sm,
+    color: theme.colors.mutedForeground,
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: theme.spacing(6),
   },
   button: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    backgroundColor: '#2E3C4B',
-    borderRadius: 8,
+    paddingHorizontal: theme.spacing(6),
+    paddingVertical: theme.spacing(3),
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.radius.md,
   },
   buttonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#fff',
+    fontSize: theme.font.sizes.sm,
+    fontWeight: theme.font.weights.semibold,
+    color: theme.colors.primaryForeground,
   },
-});
+}));

@@ -11868,6 +11868,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-edge-to-edge@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "react-native-edge-to-edge@npm:1.7.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/809dcf1c68f79cff788963ec7691b37024986e82470be5047bfbe42929fc2c7d45db23eab816321e776f0bb3a8295f7efa526377bce6a559c10681cd409d597d
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:~2.28.0":
   version: 2.28.0
   resolution: "react-native-gesture-handler@npm:2.28.0"
@@ -11978,6 +11988,23 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/ed94b57007125c715283fc760438ac8eac0677ced3201f6e272a7cd4459f3fecb672a8eed2c32664e5b8e6e0367585353b0f83f99b231f603d75094bb052c01f
+  languageName: node
+  linkType: hard
+
+"react-native-unistyles@npm:^3.0.24":
+  version: 3.0.24
+  resolution: "react-native-unistyles@npm:3.0.24"
+  peerDependencies:
+    "@react-native/normalize-colors": "*"
+    react: "*"
+    react-native: ">=0.76.0"
+    react-native-edge-to-edge: "*"
+    react-native-nitro-modules: "*"
+    react-native-reanimated: "*"
+  peerDependenciesMeta:
+    react-native-reanimated:
+      optional: true
+  checksum: 10c0/92fa56cda65018b6cd43050b74b1e28094730de119e705f233e1d6d777a06b5d13b1d226a834be0d859149c1a9600abd87704a0e3a750c43371c7eac79cb58cd
   languageName: node
   linkType: hard
 
@@ -12093,6 +12120,7 @@ __metadata:
     react-hook-form: "npm:^7.71.1"
     react-i18next: "npm:^16.5.4"
     react-native: "npm:0.81.5"
+    react-native-edge-to-edge: "npm:^1.7.0"
     react-native-gesture-handler: "npm:~2.28.0"
     react-native-mmkv: "npm:^4.1.2"
     react-native-nitro-modules: "npm:^0.33.9"
@@ -12101,6 +12129,7 @@ __metadata:
     react-native-screens: "npm:~4.16.0"
     react-native-svg: "npm:15.12.1"
     react-native-svg-transformer: "npm:^1.5.3"
+    react-native-unistyles: "npm:^3.0.24"
     react-native-worklets: "npm:^0.5.1"
     react-test-renderer: "npm:19.1.0"
     tsx: "npm:^4.21.0"

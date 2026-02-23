@@ -2,6 +2,11 @@
 const config = {
   preset: 'jest-expo',
 
+  setupFiles: [
+    'react-native-unistyles/mocks',
+    '<rootDir>/src/ui/theme/unistyles.ts',
+  ],
+
   setupFilesAfterEnv: ['<rootDir>/__tests__/setup/setup.ts'],
 
   testMatch: ['<rootDir>/__tests__/**/*.test.{ts,tsx}'],
@@ -28,6 +33,7 @@ const config = {
     '!src/**/*.d.ts',
     '!src/**/index.ts',
     '!src/app/**',
+    '!src/ui/theme/**',
   ],
 };
 

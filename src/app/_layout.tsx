@@ -1,4 +1,5 @@
 import '@/i18n';
+import '@/ui/theme/unistyles';
 
 import { type ErrorBoundaryProps, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';

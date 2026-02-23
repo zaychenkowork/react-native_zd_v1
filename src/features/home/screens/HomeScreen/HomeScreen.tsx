@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native-unistyles';
 
 import { useAuthStore } from '@/store';
 
@@ -25,34 +26,34 @@ export function HomeScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
-    backgroundColor: '#fff',
+    padding: theme.spacing(6),
+    backgroundColor: theme.colors.background,
   },
   title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: '#1a1a1a',
-    marginBottom: 8,
+    fontSize: theme.font.sizes['2xl'],
+    fontWeight: theme.font.weights.bold,
+    color: theme.colors.foreground,
+    marginBottom: theme.spacing(2),
   },
   subtitle: {
-    fontSize: 16,
-    color: '#666',
-    marginBottom: 32,
+    fontSize: theme.font.sizes.md,
+    color: theme.colors.mutedForeground,
+    marginBottom: theme.spacing(8),
   },
   button: {
-    paddingHorizontal: 32,
-    paddingVertical: 14,
-    backgroundColor: '#DC2626',
-    borderRadius: 8,
+    paddingHorizontal: theme.spacing(8),
+    paddingVertical: theme.spacing(3.5),
+    backgroundColor: theme.colors.destructive,
+    borderRadius: theme.radius.md,
   },
   buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
+    fontSize: theme.font.sizes.md,
+    fontWeight: theme.font.weights.semibold,
+    color: theme.colors.destructiveForeground,
   },
-});
+}));
