@@ -2,7 +2,7 @@ import { fireEvent, render } from '@tests/test-utils';
 
 import { useAuthStore } from '@/store';
 
-import { SignInScreen } from '@/features/auth/screens/SignInScreen/SignInScreen';
+import { SignInScreen } from '@/features/auth';
 
 beforeEach(() => {
   useAuthStore.setState({ token: null });

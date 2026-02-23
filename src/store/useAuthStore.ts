@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { zustandStorage } from '@/utils';
+import { zustandSecureStorage } from '@/utils';
 
 import { STORAGE_KEYS } from '@/constants';
 
@@ -20,7 +20,7 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: STORAGE_KEYS.AUTH_STORAGE,
-      storage: zustandStorage,
+      storage: zustandSecureStorage,
     },
   ),
 );

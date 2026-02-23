@@ -11,6 +11,8 @@ export const envSchema = z.object({
   EXPO_PUBLIC_PACKAGE: z.string(),
 
   EXPO_PUBLIC_VERSION: z.string(),
+
+  EXPO_PUBLIC_MMKV_ENCRYPTION_KEY: z.string().min(1),
 });
 
 export type Env = z.infer<typeof envSchema>;

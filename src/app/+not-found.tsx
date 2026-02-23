@@ -1,5 +1,6 @@
 import { Link, Stack } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
+import { StyleSheet } from 'react-native-unistyles';
 
 export default function NotFoundScreen() {
   return (
@@ -15,29 +16,29 @@ export default function NotFoundScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create((theme) => ({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
-    backgroundColor: '#fff',
+    padding: theme.spacing(6),
+    backgroundColor: theme.colors.background,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#1a1a1a',
-    marginBottom: 16,
+    fontSize: theme.font.sizes.lg,
+    fontWeight: theme.font.weights.semibold,
+    color: theme.colors.foreground,
+    marginBottom: theme.spacing(4),
   },
   link: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    backgroundColor: '#2E3C4B',
-    borderRadius: 8,
+    paddingHorizontal: theme.spacing(6),
+    paddingVertical: theme.spacing(3),
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.radius.md,
   },
   linkText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#fff',
+    fontSize: theme.font.sizes.sm,
+    fontWeight: theme.font.weights.semibold,
+    color: theme.colors.primaryForeground,
   },
-});
+}));

@@ -5,6 +5,8 @@
   "scripts": {
     "start": "expo start",
     "lint": "expo lint",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "prebuild": "expo prebuild",
     "prebuild:clean": "expo prebuild --clean",
     "ios": "expo run:ios",
