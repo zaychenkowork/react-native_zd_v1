@@ -1,7 +1,6 @@
 export {
-  rehydrateAuthStore,
+  loadAuthFromStorage,
   signIn,
   signOut,
   useAuthStore,
-  waitForAuthHydration,
 } from './useAuthStore';

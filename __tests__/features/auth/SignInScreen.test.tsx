@@ -1,11 +1,11 @@
-import { fireEvent, render } from '@tests/test-utils';
+import { fireEvent, render, waitFor } from '@tests/test-utils';
 
 import { useAuthStore } from '@/store';
 
 import { SignInScreen } from '@/features/auth';
 
 beforeEach(() => {
-  useAuthStore.setState({ token: null });
+  useAuthStore.setState({ accessToken: null, refreshToken: null });
 });
 
 describe('SignInScreen', () => {
@@ -16,17 +16,21 @@ describe('SignInScreen', () => {
     expect(getByRole('button', { name: 'auth.signIn' })).toBeTruthy();
   });
 
-  it('calls signIn with a token when the button is pressed', () => {
+  it('calls signIn with tokens when the button is pressed', async () => {
     const { getByRole } = render(<SignInScreen />);
 
     fireEvent.press(getByRole('button', { name: 'auth.signIn' }));
 
-    expect(useAuthStore.getState().token).toBe('mock-token');
+    await waitFor(() => {
+      expect(useAuthStore.getState().accessToken).toBe('mock-access-token');
+      expect(useAuthStore.getState().refreshToken).toBe('mock-refresh-token');
+    });
   });
 
-  it('starts with no token in the store', () => {
+  it('starts with no tokens in the store', () => {
     render(<SignInScreen />);
 
-    expect(useAuthStore.getState().token).toBeNull();
+    expect(useAuthStore.getState().accessToken).toBeNull();
+    expect(useAuthStore.getState().refreshToken).toBeNull();
   });
 });

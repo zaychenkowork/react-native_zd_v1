@@ -377,8 +377,10 @@ If your app uses custom fonts, load them inside `useAppReady` (in `src/hooks/app
 ```tsx
 import * as Font from 'expo-font';
 
+import { loadAuthFromStorage } from '@/store';
+
 async function prepare() {
-  await waitForAuthHydration();
+  await loadAuthFromStorage();
 
   await Font.loadAsync({
     'Inter-Regular': require('@/ui/assets/fonts/Inter-Regular.ttf'),

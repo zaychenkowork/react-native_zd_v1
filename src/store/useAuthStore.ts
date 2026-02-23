@@ -1,61 +1,46 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
-import { zustandSecureStorage } from '@/utils';
-
-import { STORAGE_KEYS } from '@/constants';
+import { clearTokens, loadTokens, saveTokens } from '@/utils/secureToken';
 
 interface AuthState {
-  token: string | null;
-  signIn: (token: string) => void;
-  signOut: () => void;
+  accessToken: string | null;
+  refreshToken: string | null;
+  signIn: (accessToken: string, refreshToken: string) => Promise<void>;
+  signOut: () => Promise<void>;
+  setTokens: (accessToken: string, refreshToken: string) => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      token: null,
-      signIn: (token) => set({ token }),
-      signOut: () => set({ token: null }),
-    }),
-    {
-      name: STORAGE_KEYS.AUTH_STORAGE,
-      storage: zustandSecureStorage,
-    },
-  ),
-);
+export const useAuthStore = create<AuthState>()((set) => ({
+  accessToken: null,
+  refreshToken: null,
+
+  signIn: async (accessToken, refreshToken) => {
+    await saveTokens(accessToken, refreshToken);
+    set({ accessToken, refreshToken });
+  },
+
+  signOut: async () => {
+    await clearTokens();
+    set({ accessToken: null, refreshToken: null });
+  },
+
+  /**
+   * Updates tokens in memory only (e.g. after refresh).
+   * Call saveTokens() separately if you need persistence.
+   */
+  setTokens: (accessToken, refreshToken) => set({ accessToken, refreshToken }),
+}));
 
 /**
- * Returns a promise that resolves when the auth store has finished
- * reading persisted state from MMKV. With sync storage this is nearly instant.
+ * Loads tokens from SecureStore and populates the auth store.
+ * Call once during app startup (in useAppReady) before rendering.
  */
-export const waitForAuthHydration = () =>
-  new Promise<void>((resolve) => {
-    if (useAuthStore.persist.hasHydrated()) {
-      resolve();
-      return;
-    }
-    const unsub = useAuthStore.persist.onFinishHydration(() => {
-      unsub();
-      resolve();
-    });
-  });
+export async function loadAuthFromStorage(): Promise<void> {
+  const { accessToken, refreshToken } = await loadTokens();
+  useAuthStore.setState({ accessToken, refreshToken });
+}
 
-/**
- * Force-rehydrates the auth store from encrypted MMKV.
- *
- * Called after `initSecureStorage` in `useAppReady` — at that point the MMKV
- * encryption key is available and the store can read the actual persisted data.
- * On first launch the store simply keeps its initial state `{ token: null }`.
- */
-export const rehydrateAuthStore = () =>
-  new Promise<void>((resolve) => {
-    const unsub = useAuthStore.persist.onFinishHydration(() => {
-      unsub();
-      resolve();
-    });
-    useAuthStore.persist.rehydrate();
-  });
+export const signIn = (accessToken: string, refreshToken: string) =>
+  useAuthStore.getState().signIn(accessToken, refreshToken);
 
-export const signIn = (token: string) => useAuthStore.getState().signIn(token);
 export const signOut = () => useAuthStore.getState().signOut();

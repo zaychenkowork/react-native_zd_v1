@@ -1,9 +1,5 @@
 jest.mock('expo-secure-store', () => {
-  // Pre-seed a deterministic key so getOrCreateMmkvKey() returns it
-  // immediately without calling crypto.getRandomValues in tests.
-  const mockStore = new Map<string, string>([
-    ['mmkv_encryption_key', 'test-encryption-key-32-bytes!!!!'],
-  ]);
+  const mockStore = new Map<string, string>();
 
   return {
     getItemAsync: jest.fn((key: string) =>

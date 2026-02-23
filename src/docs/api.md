@@ -26,16 +26,16 @@ When your API uses JWT with access + refresh tokens, add Axios interceptors to h
 
 ### Step 1 — Attach access token (request interceptor)
 
-Pull the token from Zustand and add it to every outgoing request:
+Pull the access token from Zustand and add it to every outgoing request:
 
 ```ts
 import { useAuthStore } from '@/store';
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const { token } = useAuthStore.getState();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const { accessToken } = useAuthStore.getState();
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -59,10 +59,10 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      const { refreshToken, setTokens } = useAuthStore.getState();
+      const { refreshToken, signIn } = useAuthStore.getState();
 
       if (!refreshToken) {
-        signOut();
+        await signOut();
         return Promise.reject(error);
       }
 
@@ -71,15 +71,12 @@ axiosInstance.interceptors.response.use(
           refresh_token: refreshToken,
         });
 
-        setTokens({
-          token: data.access_token,
-          refreshToken: data.refresh_token,
-        });
+        await signIn(data.access_token, data.refresh_token);
 
         originalRequest.headers.Authorization = `Bearer ${data.access_token}`;
         return axiosInstance(originalRequest);
       } catch {
-        signOut();
+        await signOut();
         return Promise.reject(error);
       }
     }
@@ -94,7 +91,7 @@ axiosInstance.interceptors.response.use(
 1. Every request automatically gets `Authorization: Bearer <token>` via the request interceptor.
 2. If the API responds with `401`, the response interceptor kicks in:
    - Calls the refresh endpoint with the stored refresh token
-   - Updates both tokens in Zustand (persisted to encrypted MMKV)
+   - Updates both tokens via `signIn()` (persisted to SecureStore)
    - Retries the original request with the new access token
 3. If the refresh itself fails → the user is signed out.
 4. The `_retry` flag prevents infinite refresh loops.
@@ -102,7 +99,7 @@ axiosInstance.interceptors.response.use(
 ### Key points
 
 - Use a **raw `axios.post`** (not `axiosInstance`) for the refresh call to avoid interceptor recursion.
-- Keep tokens in `useAuthStore` with `zustandSecureStorage` for encrypted persistence.
+- Tokens are stored in SecureStore via `@/utils/secureToken` and synced to `useAuthStore`.
 - Call `signOut()` from `@/store` — it clears the token and triggers navigation via `Stack.Protected`.
 
 > Full article: [How to Handle JWT Refresh Tokens Automatically with Axios](https://ahmad2point0.medium.com/how-to-handle-jwt-refresh-tokens-automatically-with-axios-react-native-expo-next-js-fc69e85b4ff6)

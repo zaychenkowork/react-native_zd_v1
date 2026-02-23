@@ -9,7 +9,7 @@ export function SignInScreen() {
   const signIn = useAuthStore((s) => s.signIn);
 
   const handleSignIn = () => {
-    signIn('mock-token');
+    signIn('mock-access-token', 'mock-refresh-token');
   };
 
   return (

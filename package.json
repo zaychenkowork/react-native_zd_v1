@@ -71,8 +71,8 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
-    "@bugsnag/plugin-expo-eas-sourcemaps": "^2.0.0",
-    "@bugsnag/source-maps": "^4.0.0",
+    "@bugsnag/plugin-expo-eas-sourcemaps": "^54.0.0",
+    "@bugsnag/source-maps": "^2.3.3",
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
     "@dev-plugins/react-query": "^0.4.0",

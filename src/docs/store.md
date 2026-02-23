@@ -27,7 +27,7 @@ export const useUIStore = create<UIStore>((set) => ({
 }));
 ```
 
-For persistence with MMKV — see `useAuthStore.ts` as reference.
+Auth tokens use SecureStore via `@/utils/secureToken`. For other persistence with MMKV — see `useTheme`, `useLanguage`.
 
 ## Folder Structure
 
