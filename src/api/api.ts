@@ -12,7 +12,7 @@ export const axiosInstance = axios.create({
 });
 
 // ── Interceptors ────────────────────────────────────────────────────
-// See src/api/README.md for a full JWT refresh token implementation
+// See src/docs/api.md for a full JWT refresh token implementation
 // guide with request/response interceptors.
 
 // ── API methods ─────────────────────────────────────────────────────

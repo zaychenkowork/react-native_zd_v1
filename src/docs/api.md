@@ -8,8 +8,7 @@ Axios instance, API methods, and the `fetcher` utility for React Query.
 src/api/
 ├── api.ts       # Axios instance + endpoint methods
 ├── fetcher.ts   # Unwraps AxiosResponse<T> → T
-├── index.ts     # Barrel re-export
-└── README.md
+└── index.ts     # Barrel re-export
 ```
 
 ## Conventions

@@ -199,7 +199,7 @@ src/
 
 ### Features (`src/features/`)
 
-Each feature is a self-contained module with screens, components, and optional local hooks. Route files in `src/app/` stay thin — they only import and re-export screen components from features. See `src/features/README.md` for full conventions.
+Each feature is a self-contained module with screens, components, and optional local hooks. Route files in `src/app/` stay thin — they only import and re-export screen components from features. See `src/docs/features.md` for full conventions.
 
 ```
 features/posts/
@@ -312,8 +312,8 @@ Header max length: **150 characters**. Config: `commitlint.config.js`
 | Thin route files            | `app/` only imports screens from `features/` — no logic            |
 | Component = folder          | Every component is a folder with `.tsx`, `types.ts`, `index.ts`    |
 | Types next to component     | Props and local enums in `types.ts` beside the component           |
-| One store per file          | `use[Name]Store.ts` — see `src/store/README.md`                    |
-| One query hook per resource | `use[Resource]Query.ts` — see `src/hooks/query/README.md`          |
+| One store per file          | `use[Name]Store.ts` — see `src/docs/store.md`                      |
+| One query hook per resource | `use[Resource]Query.ts` — see `src/docs/hooks-query.md`            |
 | Re-export from index        | Every folder has an `index.ts` barrel file                         |
 | Selectors only              | Never subscribe to the whole Zustand store                         |
 | Typed routes                | All routes are type-safe via Expo Router                           |

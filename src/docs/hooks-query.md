@@ -69,8 +69,7 @@ Flat (few hooks):
 src/hooks/query/
 ├── index.ts
 ├── useUserQuery.ts
-├── useLoginMutation.ts
-└── README.md
+└── useLoginMutation.ts
 ```
 
 Grouped by resource (many hooks):
@@ -84,7 +83,7 @@ src/hooks/query/
 ├── products/
 │   ├── useProductsQuery.ts
 │   └── useCreateProductMutation.ts
-└── README.md
+└── ...
 ```
 
 ## Docs

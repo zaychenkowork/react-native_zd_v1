@@ -34,8 +34,7 @@ For persistence with MMKV — see `useAuthStore.ts` as reference.
 ```
 src/store/
 ├── index.ts
-├── use[Name]Store.ts
-└── README.md
+└── use[Name]Store.ts
 ```
 
 ## Multiple Fields with `useShallow`

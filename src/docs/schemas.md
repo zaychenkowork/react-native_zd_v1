@@ -29,8 +29,7 @@ export type User = z.infer<typeof userSchema>;
 ```
 src/schemas/
 ├── index.ts
-├── env.ts
-└── README.md
+└── env.ts
 ```
 
 ## Using Schemas with Forms
