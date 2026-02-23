@@ -1,174 +1,65 @@
 # UI Components
 
-Headless components from [React Native Reusables](https://reactnativereusables.com/) (source is copied into the project, not installed as a package) + styles via Unistyles v3. The approach mirrors shadcn/ui — you own every file in `src/ui/primitives/`.
+Inspired by [React Native Reusables](https://reactnativereusables.com/) and the shadcn/ui philosophy — you own every file, no UI packages installed.
 
-## Conventions
-
-| Rule                       | Description                                                                               |
-| -------------------------- | ----------------------------------------------------------------------------------------- |
-| Check primitives first     | Before creating anything, look in `src/ui/primitives/`                                    |
-| Source of truth            | [reactnativereusables.com](https://reactnativereusables.com/) — copy source, adapt styles |
-| No NativeWind              | `className` / `cn()` / `cva` are replaced by `StyleSheet.create()` from Unistyles v3      |
-| Minimum packages           | Only install `@rn-primitives/<name>` that the component actually imports                  |
-| Styling only in primitives | Unistyles `StyleSheet.create((theme) => ({...}))` at the bottom of each file              |
-| Always merge style prop    | `style={[styles.root, style]}` — allows external overrides                                |
-| forwardRef                 | Required for all components that wrap a primitive                                         |
-
-## Folder Structure
+## Two folders
 
 ```
 src/ui/
-├── primitives/          ← copied from rnr, NativeWind → Unistyles (you own this code)
-│   ├── button.tsx
-│   ├── checkbox.tsx
-│   └── index.ts
-├── components/          ← app-level compositions built from primitives
-│   ├── FormField/
-│   │   └── index.tsx
-│   └── index.ts
-└── theme/
-    ├── colors.ts        ← light/dark color tokens
-    ├── fonts.ts         ← font sizes and weights
-    ├── metrics.ts       ← spacing, radius, breakpoints
-    └── unistyles.ts     ← StyleSheet.configure() call
+├── primitives/   ← headless skeletons, no styles
+└── components/   ← styled, ready-to-use components
 ```
 
-## How to Add a New Component (Manually)
+### `primitives/`
 
-1. Find the component on [reactnativereusables.com](https://reactnativereusables.com/)
-2. Copy the raw source from GitHub:
-   ```
-   https://raw.githubusercontent.com/mrzachnugent/react-native-reusables/main/packages/registry/src/new-york/components/ui/<name>.tsx
-   ```
-3. Replace `className` / `cn()` / `cva` with `StyleSheet.create((theme) => ({...}))`
-4. Save to `src/ui/primitives/<name>.tsx`
-5. Install the minimum dep:
-   ```bash
-   yarn add @rn-primitives/<name>
-   ```
+Headless components — behavior and accessibility only, no styles. Source: [rnprimitives.com](https://rnprimitives.com/) — component source is copy-pasted directly from there.
 
-## NativeWind → Unistyles Cheat Sheet
+Shared utilities (`@rn-primitives/slot`, `@rn-primitives/types`) can be installed as npm packages — they are small and not UI components. The components themselves (checkbox, dialog, switch...) are copy-pasted source only, never installed as a package.
 
-| NativeWind class          | Unistyles equivalent                          |
-| ------------------------- | --------------------------------------------- |
-| `bg-primary`              | `theme.colors.primary`                        |
-| `bg-background`           | `theme.colors.background`                     |
-| `text-foreground`         | `theme.colors.foreground`                     |
-| `text-muted-foreground`   | `theme.colors.mutedForeground`                |
-| `border-input`            | `theme.colors.border`                         |
-| `rounded-md`              | `theme.radius.md`                             |
-| `p-4`                     | `theme.spacing[4]`                            |
-| `dark:bg-xxx`             | handled by dark theme automatically           |
-| `disabled:opacity-50`     | `props.disabled && styles.disabled`           |
-| `cva(base, { variants })` | `StyleSheet.create` with `variants: {}` block |
+### `components/`
 
-## Quick Example
+The main folder. All project components live here. Using `primitives/` is not required — a component can be written from scratch or taken from [reactnativereusables.com](https://reactnativereusables.com/).
 
-`src/ui/primitives/checkbox.tsx` — adapted from rnr:
+**One hard rule:** styling via [Unistyles v3](https://unistyl.es/v3/start/getting-started/) only. Styles must rely on theme tokens (`theme.colors.*`, `theme.spacing.*`, `theme.radius.*`) so that switching themes updates the entire UI without touching components.
 
-```tsx
-import React from 'react';
-import * as CheckboxPrimitive from '@rn-primitives/checkbox';
-import { StyleSheet } from 'react-native-unistyles';
+## Conventions
 
-function Checkbox({
-  style,
-  ...props
-}: CheckboxPrimitive.RootProps &
-  React.RefAttributes<CheckboxPrimitive.RootRef>) {
-  return (
-    <CheckboxPrimitive.Root
-      style={[styles.root, props.checked && styles.rootChecked, style]}
-      hitSlop={24}
-      {...props}
-    >
-      <CheckboxPrimitive.Indicator style={styles.indicator} />
-    </CheckboxPrimitive.Root>
-  );
-}
+| Rule              | Description                                                       |
+| ----------------- | ----------------------------------------------------------------- |
+| Unistyles v3 only | `StyleSheet.create((theme) => ({...}))` at the bottom of the file |
+| Theme tokens      | Colors, spacing, radius — always from `theme.*`, never hardcoded  |
+| Merge style prop  | `style={[styles.root, style]}` — never override external styles   |
+| `forwardRef`      | Required for components wrapping a primitive                      |
+| `displayName`     | Always set                                                        |
 
-Checkbox.displayName = 'Checkbox';
+## Working with AI (Cursor)
 
-export { Checkbox };
+The project has a Cursor rule: `.cursor/rules/rn-primitives.mdc`.
 
-const styles = StyleSheet.create((theme) => ({
-  root: {
-    width: 16,
-    height: 16,
-    borderWidth: 1,
-    borderRadius: theme.radius.sm,
-    borderColor: theme.colors.border,
-    overflow: 'hidden',
-  },
-  rootChecked: {
-    backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
-  },
-  indicator: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-}));
-```
+It tells the AI what to do when you ask to add a component:
 
-## Available Components on reactnativereusables.com
+- check if it already exists in `primitives/` and `components/`
+- if not — find the current source on [rnprimitives.com](https://rnprimitives.com/) or [reactnativereusables.com](https://reactnativereusables.com/)
+- adapt to Unistyles v3 (remove NativeWind / className)
+- install minimum deps at exact versions
+- if a design screen is attached — study all states, ask about anything unclear, then write code
+
+**The rule activates automatically** when any file from `src/ui/**/*.tsx` is open.
+
+**From anywhere else** — add `@rn-primitives` to the start of your message:
 
 ```
-accordion      alert-dialog   alert          aspect-ratio   avatar
-badge          button         card           checkbox       collapsible
-context-menu   dialog         dropdown-menu  hover-card     input
-label          menubar        popover        progress       radio-group
-select         separator      skeleton       switch         tabs
-text           textarea       toggle         toggle-group   tooltip
+@rn-primitives Add a Checkbox.
 ```
 
-## Working with AI
-
-All AI behaviour for this folder is defined in `.cursor/rules/rn-primitives.mdc`. The rule covers the full workflow: checking the local primitives folder, fetching source from reactnativereusables.com, converting NativeWind to Unistyles, deciding which packages to install, and handling design screens.
-
-### When the rule is active
-
-| Situation                                        | What to do                                        |
-| ------------------------------------------------ | ------------------------------------------------- |
-| Any `src/ui/**/*.tsx` file is open in the editor | Nothing — rule activates automatically via glob   |
-| New chat, no `src/ui/` file open                 | Add `@rn-primitives` at the start of your message |
-
-### Prompt templates
-
-Minimal — AI knows what to do from the rule:
-
 ```
-@rn-primitives Add a Switch.
+@rn-primitives Add a Button with variants: default, destructive, ghost.
+[attach design screen]
+Ask me if anything is unclear before coding.
 ```
 
-With design screen:
+## References
 
-```
-@rn-primitives Add a Button with variants: default, destructive, outline, ghost.
-[attach design image]
-Ask me if anything is unclear before writing any code.
-```
-
-With explicit instructions if you want to be sure:
-
-```
-@rn-primitives Add a Select dropdown.
-Check src/ui/primitives/ first.
-If not there — fetch latest source from rnr, convert to Unistyles, install minimum deps.
-```
-
-### What the AI does (in order)
-
-1. Reads `src/ui/primitives/` — if the component is already there, uses it
-2. If not — fetches current source from the reactnativereusables GitHub registry
-3. Converts `className` / `cn()` / `cva` → `StyleSheet.create((theme) => ({...}))`
-4. Installs only the `@rn-primitives/<name>` package the component actually imports
-5. If a design screen is attached — reads all states, maps colors to theme tokens, asks before coding
-6. Saves the adapted file to `src/ui/primitives/<name>.tsx`
-
-## Docs
-
-- [React Native Reusables](https://reactnativereusables.com/)
-- [Unistyles v3](https://unistyl.es/v3/start/getting-started/)
-- [rn-primitives](https://rnprimitives.com/)
+- [rn-primitives](https://rnprimitives.com/) — headless source for `primitives/`
+- [React Native Reusables](https://reactnativereusables.com/) — source for `components/`
+- [Unistyles v3](https://unistyl.es/v3/start/getting-started/) — styling system
