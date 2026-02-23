@@ -1,4 +1,5 @@
 export {
+  rehydrateAuthStore,
   signIn,
   signOut,
   useAuthStore,

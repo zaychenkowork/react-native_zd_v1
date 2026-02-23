@@ -44,11 +44,6 @@ const _env: EnvType = {
   EXPO_PUBLIC_API_URL: process.env.EXPO_PUBLIC_API_URL ?? '',
 
   EXPO_PUBLIC_VERSION: packageJSON.version,
-
-  // In production, replace this with a key stored in iOS Keychain / Android Keystore.
-  // For EAS builds, store it as an EAS Secret: `eas secret:create`.
-  EXPO_PUBLIC_MMKV_ENCRYPTION_KEY:
-    process.env.EXPO_PUBLIC_MMKV_ENCRYPTION_KEY ?? 'dev-insecure-key',
 };
 
 const Env = STRICT_ENV_VALIDATION

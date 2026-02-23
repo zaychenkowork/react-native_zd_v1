@@ -1,7 +1,8 @@
+export { getOrCreateMmkvKey } from './secureKey';
 export {
   getItem,
+  initSecureStorage,
   removeItem,
-  secureStorage,
   setItem,
   storage,
   zustandSecureStorage,

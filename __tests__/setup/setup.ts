@@ -1,4 +1,5 @@
 import './mocks/expo-router';
+import './mocks/expo-secure-store';
 import './mocks/i18next';
 import './mocks/mmkv';
 import './mocks/react-query';

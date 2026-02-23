@@ -1,8 +1,6 @@
 import { createMMKV } from 'react-native-mmkv';
 import { createJSONStorage } from 'zustand/middleware';
 
-import { CONFIG } from '@/config';
-
 /**
  * General-purpose storage for non-sensitive data (theme, language, preferences).
  * Not encrypted — do NOT store tokens or credentials here.
@@ -10,18 +8,26 @@ import { CONFIG } from '@/config';
 export const storage = createMMKV();
 
 /**
- * Encrypted storage for sensitive data (auth tokens, user credentials, etc.).
+ * Encrypted MMKV instance for sensitive data (auth tokens, credentials).
  *
- * The encryption key comes from CONFIG.MMKV_ENCRYPTION_KEY (set via env).
- * For production apps, replace the env key with one stored in the device
- * keychain: iOS Keychain via `expo-secure-store`, Android Keystore via
- * `react-native-keychain`. Store the EAS build key as an EAS Secret:
- * `eas secret:create --name EXPO_PUBLIC_MMKV_ENCRYPTION_KEY --value <key>`
+ * Not created at module level — initialized via `initSecureStorage(key)` during
+ * app startup. The key is retrieved from iOS Keychain / Android Keystore by
+ * `getOrCreateMmkvKey()` in `useAppReady`, so it is never bundled in the JS
+ * layer and is unique per device.
+ *
+ * @see src/utils/secureKey.ts
+ * @see src/hooks/app/useAppReady.ts
  */
-export const secureStorage = createMMKV({
-  id: 'secure-storage',
-  encryptionKey: CONFIG.MMKV_ENCRYPTION_KEY,
-});
+let _secureStorage: ReturnType<typeof createMMKV> | null = null;
+
+/**
+ * Initializes the encrypted MMKV instance with the provided key.
+ * Must be called once during app startup (inside `useAppReady`) before any
+ * store that uses `zustandSecureStorage` is rehydrated.
+ */
+export function initSecureStorage(encryptionKey: string): void {
+  _secureStorage = createMMKV({ id: 'secure-storage', encryptionKey });
+}
 
 export function getItem<T>(key: string): T | null {
   const value = storage.getString(key);
@@ -55,10 +61,16 @@ export const zustandStorage = createJSONStorage(() => ({
 
 /**
  * Zustand persist middleware adapter for encrypted MMKV (sensitive data).
- * Use this for stores that persist auth tokens or other credentials.
+ *
+ * Returns `null` for all reads before `initSecureStorage` is called — Zustand
+ * will fall back to the store's initial state. After `initSecureStorage` runs
+ * in `useAppReady`, the store is force-rehydrated via `rehydrateAuthStore()`
+ * to load the actual persisted data.
  */
 export const zustandSecureStorage = createJSONStorage(() => ({
-  getItem: (key: string) => secureStorage.getString(key) ?? null,
-  setItem: (key: string, value: string) => secureStorage.set(key, value),
-  removeItem: (key: string) => secureStorage.remove(key),
+  getItem: (key: string) => _secureStorage?.getString(key) ?? null,
+  setItem: (key: string, value: string) => _secureStorage?.set(key, value),
+  removeItem: (key: string) => {
+    _secureStorage?.remove(key);
+  },
 }));

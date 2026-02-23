@@ -41,5 +41,21 @@ export const waitForAuthHydration = () =>
     });
   });
 
+/**
+ * Force-rehydrates the auth store from encrypted MMKV.
+ *
+ * Called after `initSecureStorage` in `useAppReady` — at that point the MMKV
+ * encryption key is available and the store can read the actual persisted data.
+ * On first launch the store simply keeps its initial state `{ token: null }`.
+ */
+export const rehydrateAuthStore = () =>
+  new Promise<void>((resolve) => {
+    const unsub = useAuthStore.persist.onFinishHydration(() => {
+      unsub();
+      resolve();
+    });
+    useAuthStore.persist.rehydrate();
+  });
+
 export const signIn = (token: string) => useAuthStore.getState().signIn(token);
 export const signOut = () => useAuthStore.getState().signOut();
