@@ -266,6 +266,23 @@ Docs: [Unistyles v3](https://unistyl.es/v3/start/getting-started) · [Theming](h
 
 SVGs are imported as React components via `react-native-svg-transformer`. Use the `<Icon>` component with the icon registry in `src/ui/assets/icons/`.
 
+## Testing
+
+Jest + React Native Testing Library. See `src/docs/testing.md` for full conventions.
+
+| Priority     | What                                 | Type             |
+| ------------ | ------------------------------------ | ---------------- |
+| **Required** | Utilities (`src/utils/`)             | Unit             |
+| **Required** | UI components (`src/ui/components/`) | Unit / Component |
+| Recommended  | Critical screens (auth, checkout)    | Integration      |
+| Recommended  | Zustand stores (non-trivial logic)   | Unit             |
+
+```bash
+yarn test              # Run all tests
+yarn test:watch        # Watch mode
+yarn test:coverage     # Coverage report
+```
+
 ## Code Quality & Git Hooks
 
 ### Pre-commit (husky + lint-staged)

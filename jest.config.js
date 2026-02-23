@@ -14,10 +14,9 @@ const config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@env$': '<rootDir>/env.ts',
+    '^env$': '<rootDir>/env.ts',
     '^@tests/(.*)$': '<rootDir>/__tests__/$1',
     '\\.svg$': '<rootDir>/__tests__/setup/svgMock.tsx',
-    // Prevent Expo's lazy globals from crashing during Jest teardown.
-    // Node.js already provides TextDecoder, URL, structuredClone etc. natively.
     '^expo/src/winter$': '<rootDir>/__tests__/setup/empty.ts',
   },
 
