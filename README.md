@@ -22,7 +22,7 @@ Expo-based React Native template with TypeScript, file-based routing, and a scal
 
 ### Prerequisites
 
-- Node.js >= 20 (see `.nvmrc`)
+- Node.js >= 22 (see `.nvmrc`)
 - Yarn
 - [EAS CLI](https://docs.expo.dev/build/setup/) (`npm install -g eas-cli`)
 - macOS: Xcode + CocoaPods (for iOS builds)
