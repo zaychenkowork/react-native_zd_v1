@@ -21,8 +21,9 @@ const appIconBadgeConfig: AppIconBadgeConfig = {
   ],
 };
 
-const EXPO_ACCOUNT_OWNER = 'dz.work';
-const EAS_PROJECT_ID = '996dc461-0d90-42f4-80f5-b690b2340268';
+// ⚠️ REPLACE with your Expo account username and project ID before running `eas init`
+const EXPO_ACCOUNT_OWNER = 'your-expo-username';
+const EAS_PROJECT_ID = 'your-eas-project-id';
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
@@ -31,7 +32,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   owner: EXPO_ACCOUNT_OWNER,
 
   scheme: Env.EXPO_PUBLIC_SCHEME,
-  slug: 'test-template',
+  slug: 'your-app-slug', // ⚠️ REPLACE with your app slug
 
   version: Env.EXPO_PUBLIC_VERSION.toString(),
 

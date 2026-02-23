@@ -4,8 +4,6 @@ import * as T from '@/types/api';
 
 import { CONFIG } from '@/config';
 
-// import { signOut, useAuthStore } from '@/store';
-
 export const axiosInstance = axios.create({
   baseURL: CONFIG.API_URL,
   headers: {
@@ -13,30 +11,11 @@ export const axiosInstance = axios.create({
   },
 });
 
-// ── Interceptors (uncomment when auth is wired) ─────────────────────
-//
-// axiosInstance.interceptors.request.use((config) => {
-//   const token = useAuthStore.getState().token;
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-//   return config;
-// });
-//
-// axiosInstance.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     if (axios.isAxiosError(error) && error.response?.status === 401) {
-//       signOut();
-//     }
-//     return Promise.reject(error);
-//   },
-// );
+// ── Interceptors ────────────────────────────────────────────────────
+// See src/api/README.md for a full JWT refresh token implementation
+// guide with request/response interceptors.
 
 // ── API methods ─────────────────────────────────────────────────────
-// Group endpoints by domain. Import request/response types from @/types.
-//
-//
 export const api = {
   login: (params: T.LoginRequest) =>
     axiosInstance.post<T.LoginResponse>('auth/login', params),

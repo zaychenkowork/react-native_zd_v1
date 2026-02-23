@@ -347,6 +347,56 @@ All interactive and semantic elements can include accessibility props. Use i18n 
 </Pressable>
 ```
 
+### Custom Fonts (Splash Screen)
+
+If your app uses custom fonts, load them inside `useAppReady` (in `src/hooks/app/useAppReady.ts`) **before** the splash screen is hidden. This prevents a flash of unstyled text on launch.
+
+```tsx
+import * as Font from 'expo-font';
+
+async function prepare() {
+  await waitForAuthHydration();
+
+  await Font.loadAsync({
+    'Inter-Regular': require('@/ui/assets/fonts/Inter-Regular.ttf'),
+    'Inter-Bold': require('@/ui/assets/fonts/Inter-Bold.ttf'),
+  });
+
+  // ... prefetch, etc.
+  setIsReady(true);
+  SplashScreen.hideAsync();
+}
+```
+
+Install the module: `npx expo install expo-font`
+
+Docs: [expo-font](https://docs.expo.dev/versions/latest/sdk/font/)
+
+### OTA Updates (expo-updates)
+
+For production apps, [expo-updates](https://docs.expo.dev/versions/latest/sdk/updates/) enables over-the-air JavaScript bundle updates — push bug fixes and minor changes without a full App Store / Google Play review cycle.
+
+```bash
+npx expo install expo-updates
+```
+
+Add the plugin to `app.config.ts`:
+
+```ts
+plugins: [
+  // ... existing plugins
+  'expo-updates',
+],
+```
+
+Then configure an update URL in `eas.json` or use EAS Update:
+
+```bash
+eas update --branch production --message "fix: resolve crash on profile screen"
+```
+
+Docs: [EAS Update](https://docs.expo.dev/eas-update/introduction/) · [expo-updates](https://docs.expo.dev/versions/latest/sdk/updates/)
+
 ### Environment Validation
 
 Environment variables are validated at build time via Zod schema (`src/schemas/env.ts`). Direct access to `process.env` is blocked by an ESLint rule — use `Env` from `env.ts` (for `app.config.ts`) or `CONFIG` from `@/config` (for app code) instead.
