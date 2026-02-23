@@ -4,20 +4,21 @@ Expo-based React Native template with TypeScript, file-based routing, and a scal
 
 ## Tech Stack
 
-| Category     | Technology                      |
-| ------------ | ------------------------------- |
-| Framework    | React Native 0.81 + Expo SDK 54 |
-| Language     | TypeScript (strict mode)        |
-| Navigation   | Expo Router (file-based)        |
-| Styling      | Unistyles v3 (C++ engine)       |
-| Server State | TanStack React Query v5         |
-| Client State | Zustand v5                      |
-| Validation   | Zod v4                          |
-| HTTP Client  | Axios                           |
-| Forms        | React Hook Form v7              |
-| Storage      | MMKV                            |
-| Animations   | Reanimated v4                   |
-| Build        | EAS Build + local prebuild      |
+| Category       | Technology                      |
+| -------------- | ------------------------------- |
+| Framework      | React Native 0.81 + Expo SDK 54 |
+| Language       | TypeScript (strict mode)        |
+| Navigation     | Expo Router (file-based)        |
+| Styling        | Unistyles v3 (C++ engine)       |
+| Server State   | TanStack React Query v5         |
+| Client State   | Zustand v5                      |
+| Validation     | Zod v4                          |
+| HTTP Client    | Axios                           |
+| Forms          | React Hook Form v7              |
+| Storage        | MMKV                            |
+| Animations     | Reanimated v4                   |
+| Error Tracking | BugSnag                         |
+| Build          | EAS Build + local prebuild      |
 
 ## Quick Start
 
@@ -43,11 +44,12 @@ Copy the example env file and fill in the values:
 cp .env.example .env
 ```
 
-| Variable                | Description                                  | Example                   |
-| ----------------------- | -------------------------------------------- | ------------------------- |
-| `EXPO_PUBLIC_RUN_MODE`  | App environment                              | `dev` / `stg` / `prod`    |
-| `EXPO_PUBLIC_API_URL`   | API base URL                                 | `https://api.example.com` |
-| `STRICT_ENV_VALIDATION` | Enable strict Zod validation before prebuild | `true` / `false`          |
+| Variable                      | Description                                  | Example                   |
+| ----------------------------- | -------------------------------------------- | ------------------------- |
+| `EXPO_PUBLIC_RUN_MODE`        | App environment                              | `dev` / `stg` / `prod`    |
+| `EXPO_PUBLIC_API_URL`         | API base URL                                 | `https://api.example.com` |
+| `EXPO_PUBLIC_BUGSNAG_API_KEY` | BugSnag API key for error reporting          | `abc123...`               |
+| `STRICT_ENV_VALIDATION`       | Enable strict Zod validation before prebuild | `true` / `false`          |
 
 ## Running the App
 
@@ -171,8 +173,6 @@ yarn eas:prod:android       # Production → Android .aab
 yarn eas:prod:ios:submit       # Build iOS + upload to App Store Connect
 yarn eas:prod:android:submit   # Build Android + upload to Google Play
 ```
-
-##### Store Requirements
 
 ## Project Structure
 

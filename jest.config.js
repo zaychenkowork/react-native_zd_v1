@@ -12,6 +12,7 @@ const config = {
   testMatch: ['<rootDir>/__tests__/**/*.test.{ts,tsx}'],
 
   moduleNameMapper: {
+    '^@bugsnag/expo$': '<rootDir>/__tests__/setup/mocks/bugsnag.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@env$': '<rootDir>/env.ts',
     '^env$': '<rootDir>/env.ts',

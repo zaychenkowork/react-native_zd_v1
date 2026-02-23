@@ -79,6 +79,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     ['app-icon-badge', appIconBadgeConfig],
+    ...(Env.EXPO_PUBLIC_BUGSNAG_API_KEY
+      ? ['@bugsnag/plugin-expo-eas-sourcemaps']
+      : []),
   ],
   experiments: {
     typedRoutes: true,
@@ -87,6 +90,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     // supportsRTL: true,
     eas: {
       projectId: EAS_PROJECT_ID,
+    },
+    bugsnag: {
+      apiKey: Env.EXPO_PUBLIC_BUGSNAG_API_KEY || undefined,
     },
   },
 });

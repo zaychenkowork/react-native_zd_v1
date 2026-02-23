@@ -1,5 +1,6 @@
 import '@/i18n';
 
+import Bugsnag from '@bugsnag/expo';
 import { type ErrorBoundaryProps, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -16,6 +17,7 @@ import { useAuthStore } from '@/store';
 SplashScreen.preventAutoHideAsync();
 
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  Bugsnag.notify(error);
   return <ErrorFallback error={error} onRetry={retry} />;
 }
 

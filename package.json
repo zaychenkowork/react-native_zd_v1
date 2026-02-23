@@ -3,6 +3,7 @@
   "main": "index.ts",
   "version": "1.0.0",
   "scripts": {
+    "eas-build-on-success": "npx bugsnag-eas-build-on-success",
     "start": "expo start",
     "lint": "expo lint",
     "type-check": "tsc --noEmit",
@@ -31,12 +32,18 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@bugsnag/expo": "^54.0.0",
+    "@react-native-community/netinfo": "^11.4.1",
     "@tanstack/react-query": "^5.90.21",
     "app-icon-badge": "^0.1.2",
     "axios": "^1.13.5",
     "expo": "~54.0.33",
+    "expo-application": "^7.0.8",
     "expo-constants": "~18.0.13",
+    "expo-crypto": "^15.0.8",
     "expo-dev-client": "~6.0.20",
+    "expo-device": "^8.0.10",
+    "expo-file-system": "^19.0.21",
     "expo-linking": "~8.0.11",
     "expo-localization": "~17.0.8",
     "expo-network": "~8.0.8",
@@ -64,6 +71,8 @@
     "zustand": "^5.0.11"
   },
   "devDependencies": {
+    "@bugsnag/plugin-expo-eas-sourcemaps": "^2.0.0",
+    "@bugsnag/source-maps": "^4.0.0",
     "@commitlint/cli": "^20.4.2",
     "@commitlint/config-conventional": "^20.4.2",
     "@dev-plugins/react-query": "^0.4.0",
