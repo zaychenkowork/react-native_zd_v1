@@ -5,6 +5,7 @@ import BugsnagPerformance from '@bugsnag/expo-performance';
 import { type ErrorBoundaryProps, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { ErrorFallback } from '@/ui/components';
@@ -18,7 +19,10 @@ import { useAuthStore } from '@/store';
 SplashScreen.preventAutoHideAsync();
 
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
-  Bugsnag.notify(error);
+  useEffect(() => {
+    Bugsnag.notify(error);
+  }, [error]);
+
   return <ErrorFallback error={error} onRetry={retry} />;
 }
 

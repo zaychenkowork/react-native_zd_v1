@@ -12,7 +12,7 @@ describe('Icon', () => {
   });
 
   it('looks up the icon from the ICONS registry', () => {
-    const spy = jest.fn(() => null);
+    const spy = jest.fn((_props: Record<string, unknown>) => null);
     const original = ICONS.arrowRight;
 
     // Temporarily replace icon to verify it gets called
@@ -26,26 +26,28 @@ describe('Icon', () => {
   });
 
   it('passes size and fill props to the SVG component', () => {
-    const spy = jest.fn(() => null);
+    const spy = jest.fn((_props: Record<string, unknown>) => null);
     (ICONS as Record<string, unknown>).arrowRight = spy;
 
     render(<Icon name="arrowRight" size={32} fill="#FF0000" />);
 
-    const props = spy.mock.calls[0][0] as Record<string, unknown>;
+    const props = spy.mock.calls[0][0];
     expect(props.width).toBe(32);
     expect(props.height).toBe(32);
     expect(props.fill).toBe('#FF0000');
 
-    (ICONS as Record<string, unknown>).arrowRight = jest.fn(() => null);
+    (ICONS as Record<string, unknown>).arrowRight = jest.fn(
+      (_props: Record<string, unknown>) => null,
+    );
   });
 
   it('uses default size of 20 and fill of currentColor', () => {
-    const spy = jest.fn(() => null);
+    const spy = jest.fn((_props: Record<string, unknown>) => null);
     (ICONS as Record<string, unknown>).arrowRight = spy;
 
     render(<Icon name="arrowRight" />);
 
-    const props = spy.mock.calls[0][0] as Record<string, unknown>;
+    const props = spy.mock.calls[0][0];
     expect(props.width).toBe(20);
     expect(props.height).toBe(20);
     expect(props.fill).toBe('currentColor');

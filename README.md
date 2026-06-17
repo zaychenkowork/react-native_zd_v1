@@ -53,10 +53,12 @@ cp .env.example .env
 
 ## Running the App
 
-### Development (Expo Go / Dev Client)
+### Development (Dev Client)
+
+> This app relies on native modules (MMKV, Unistyles v3, Reanimated, BugSnag) that are **not available in Expo Go**. Build a Dev Client first (see [Native Build](#native-build-dev-client) below) — `yarn start` then connects to it automatically.
 
 ```bash
-yarn start          # Start Metro dev server
+yarn start          # Start Metro dev server (connects to the Dev Client)
 ```
 
 ### Native Build (Dev Client)
