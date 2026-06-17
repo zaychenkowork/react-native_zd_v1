@@ -307,6 +307,16 @@ If ESLint finds errors it can't auto-fix, the commit is blocked.
 
 Config: `.lintstagedrc.json`
 
+### Pre-push (type-check + tests)
+
+On every `git push`, the full quality gate runs before anything leaves your machine:
+
+```bash
+yarn type-check && yarn test
+```
+
+If either fails, the push is blocked. Lint stays fast at commit time (staged files only), while the slower project-wide checks run once per push. Config: `.husky/pre-push`
+
 ### Commit Message (commitlint)
 
 All commit messages must follow [Conventional Commits 1.0.0](https://www.conventionalcommits.org/en/v1.0.0/):
