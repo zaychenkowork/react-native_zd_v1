@@ -409,6 +409,62 @@ Install the module: `npx expo install expo-font`
 
 Docs: [expo-font](https://docs.expo.dev/versions/latest/sdk/font/)
 
+### Splash Screen (Dark Mode)
+
+The splash screen is configured via the `expo-splash-screen` plugin in `app.config.ts`. To show a different splash in dark mode, add a `dark` variant with its own background and image:
+
+```ts
+[
+  'expo-splash-screen',
+  {
+    backgroundColor: '#2E3C4B',
+    image: './assets/splash-icon.png',
+    imageWidth: 150,
+    dark: {
+      backgroundColor: '#000000',
+      image: './assets/splash-icon-dark.png',
+    },
+  },
+],
+```
+
+> The template ships a single placeholder splash (`assets/splash-icon.png`). Replace it with real artwork, and add `splash-icon-dark.png` if you want a dark variant.
+
+Docs: [expo-splash-screen](https://docs.expo.dev/versions/latest/sdk/splash-screen/)
+
+### Images (expo-image)
+
+For any app that renders remote images — especially in lists — [`expo-image`](https://docs.expo.dev/versions/latest/sdk/image/) is the recommended `Image` replacement. It is **not installed by default** (kept lean, like `expo-font` / `expo-updates`); add it when you need it:
+
+```bash
+npx expo install expo-image
+```
+
+Why it's preferred over the built-in React Native `Image`:
+
+| Feature                          | `expo-image`                                 | RN `Image`              |
+| -------------------------------- | -------------------------------------------- | ----------------------- |
+| Configurable disk + memory cache | ✅ `cachePolicy` (default `disk`)            | ⚠️ limited, not tunable |
+| Blurhash / thumbhash placeholder | ✅ `placeholder={{ blurhash }}`              | ❌                      |
+| Fade-in transition               | ✅ `transition`                              | ❌                      |
+| List recycling                   | ✅ `recyclingKey` (no stale image on scroll) | ❌                      |
+| Modern formats (WebP/AVIF)       | ✅ native                                    | ⚠️ limited              |
+
+```tsx
+import { Image } from 'expo-image';
+
+<Image
+  source="https://example.com/photo.jpg"
+  placeholder={{ blurhash }}
+  contentFit="cover"
+  transition={300}
+  cachePolicy="memory-disk"
+  style={{ width: 200, height: 200 }}
+/>;
+```
+
+Docs: [expo-image](https://docs.expo.dev/versions/latest/sdk/image/)
+
 ### OTA Updates (expo-updates)
 
 For production apps, [expo-updates](https://docs.expo.dev/versions/latest/sdk/updates/) enables over-the-air JavaScript bundle updates — push bug fixes and minor changes without a full App Store / Google Play review cycle.
@@ -433,6 +489,12 @@ eas update --branch production --message "fix: resolve crash on profile screen"
 ```
 
 Docs: [EAS Update](https://docs.expo.dev/eas-update/introduction/) · [expo-updates](https://docs.expo.dev/versions/latest/sdk/updates/)
+
+### Deep Linking
+
+A custom URL scheme is already configured (`scheme` in `app.config.ts`), and Expo Router resolves deep links from the file-based routes out of the box. Universal Links (iOS) and App Links (Android) — the `https://` links that open the app — still need to be set up per project.
+
+Setup guidance lives in [`src/docs/deep-linking.md`](src/docs/deep-linking.md) _(placeholder — to be filled in once the production domain and link strategy are decided)._
 
 ### Environment Validation
 
