@@ -34,6 +34,7 @@ src/features/
 │   │   └── PostDetailScreen.tsx
 │   ├── components/
 │   │   └── PostCard.tsx
+│   ├── queries.ts              # (optional) feature-local query keys + hooks
 │   ├── hooks/                  # (optional) feature-local hooks
 │   │   └── usePostFilters.ts
 │   └── types.ts                # (optional) shared feature types

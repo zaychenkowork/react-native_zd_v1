@@ -53,6 +53,7 @@ No logic, no hooks, no JSX in route files.
 src/features/[name]/
 ├── screens/[Name]Screen.tsx   # Screen entry points
 ├── components/[Name].tsx      # Feature-specific UI
+├── queries.ts                 # (optional) feature-local query keys + hooks
 ├── hooks/                     # (optional) feature-local hooks
 └── types.ts                   # (optional) shared feature types
 ```
@@ -120,15 +121,17 @@ const { accessToken, signOut } = useAuthStore(
 
 One store per file: `use[Name]Store.ts` in `src/store/`.
 
-### React Query — one hook per resource
+### React Query — one file per domain
 
-Hook files live in `src/hooks/query/`, named `use[Resource]Query.ts` or `use[Action]Mutation.ts`.
+Each domain gets one file holding a hierarchical key factory (`userKeys`), `queryOptions` factories (`userQueries`), and the hooks — see the reference `src/hooks/query/user.ts` and `src/docs/hooks-query.md`. Query keys are NEVER flat enums or inline literals. Placement: `features/[name]/queries.ts` while one feature uses the domain; promote to `src/hooks/query/[domain].ts` at 2+ consumers. The `@tanstack/query/prefer-query-options` ESLint rule enforces the `queryOptions` shape.
+
 Always wrap API calls with `fetcher()` from `@/api/fetcher` to unwrap `AxiosResponse<T>` → `T`:
 
 ```ts
-import { api } from '@/api/client';
-import { fetcher } from '@/api/fetcher';
-queryFn: () => fetcher(api.getUser(id));
+queryOptions({
+  queryKey: userKeys.detail(id),
+  queryFn: () => fetcher(api.getUser(id)),
+});
 ```
 
 ### Environment access

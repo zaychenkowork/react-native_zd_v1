@@ -54,6 +54,7 @@ module.exports = defineConfig([
         },
       ],
       'simple-import-sort/exports': 'error',
+      '@tanstack/query/prefer-query-options': 'error',
       'no-restricted-syntax': [
         'error',
         {

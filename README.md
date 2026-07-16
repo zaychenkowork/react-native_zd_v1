@@ -224,6 +224,7 @@ features/posts/
 │   └── PostsScreen.tsx
 ├── components/         # Feature-specific UI components
 │   └── PostCard.tsx
+├── queries.ts          # (optional) Feature-local query keys + hooks
 ├── hooks/              # (optional) Feature-local hooks
 └── types.ts            # (optional) Shared feature types
 ```

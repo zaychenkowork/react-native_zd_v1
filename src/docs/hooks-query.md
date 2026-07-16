@@ -4,46 +4,68 @@ TanStack React Query hooks for server state — fetching, caching, and mutations
 
 ## Conventions
 
-| Rule                         | Description                                                                                                                  |
-| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| One hook per resource/action | Flat: `use[Resource]Query.ts` / `use[Action]Mutation.ts`, or grouped: `[resource]/` folder with queries and mutations inside |
-| Direct imports               | Import hooks from their concrete module — no barrels                                                                         |
-| Query keys as enum           | Define in `src/types/enums.ts`, import via `@/types/enums`                                                                   |
-| Invalidate on logout         | Clear relevant queries when auth token is removed                                                                            |
-| Use `fetcher()` in queryFn   | Wrap `api.*` calls with `fetcher()` from `@/api/fetcher` to unwrap `res.data`                                                |
+| Rule                       | Description                                                                                                       |
+| -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| One file per domain        | Keys + `queryOptions` factories + hooks live together: `[domain].ts` (see `src/hooks/query/user.ts`)              |
+| Feature-first placement    | A domain used by one feature lives in `features/[name]/queries.ts`; promote to `src/hooks/query/` at 2+ consumers |
+| Keys via key factory       | Hierarchical arrays built from a `[domain]Keys` factory — never a flat enum, never inline literals                |
+| Options via `queryOptions` | Combine key + queryFn in a `[domain]Queries` factory; enforced by the `@tanstack/query/prefer-query-options` rule |
+| Direct imports             | Import hooks from their concrete module — no barrels                                                              |
+| Invalidate by prefix       | `invalidateQueries({ queryKey: userKeys.all })` clears the whole domain subtree                                   |
+| Invalidate on logout       | Call `queryClient.clear()` when the auth token is removed                                                         |
+| Use `fetcher()` in queryFn | Wrap `api.*` calls with `fetcher()` from `@/api/fetcher` to unwrap `res.data`                                     |
 
-## Quick Example
+## Why key factories, not an enum
+
+A query key is a **hierarchical array**, not a string: `['user', 'detail', 5]`. Invalidation matches by prefix, so structure is everything — and a flat enum only covers the root word, leaving the parameterized tail untyped and unstructured at every call site. A key factory keeps the whole shape in one place:
 
 ```ts
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/api/client';
-import { fetcher } from '@/api/fetcher';
-import { QueryKey } from '@/types/enums';
+export const userKeys = {
+  all: ['user'] as const,
+  details: () => [...userKeys.all, 'detail'] as const,
+  detail: (id: number) => [...userKeys.details(), id] as const,
+};
 
-export function useUserQuery(id: string) {
-  return useQuery({
-    queryKey: [QueryKey.User, id],
-    queryFn: () => fetcher(api.getUser(id)),
-  });
+// invalidate one user:      queryClient.invalidateQueries({ queryKey: userKeys.detail(5) })
+// invalidate every user:    queryClient.invalidateQueries({ queryKey: userKeys.all })
+```
+
+Sources: [Effective React Query Keys (TkDodo)](https://tkdodo.eu/blog/effective-react-query-keys), [Query Options API (official)](https://tanstack.com/query/latest/docs/framework/react/guides/query-options). Real-world reference: Bluesky co-locates a key factory with the hooks of each domain in [`state/queries/`](https://github.com/bluesky-social/social-app/tree/main/src/state/queries).
+
+## The domain file shape
+
+`src/hooks/query/user.ts` is the living reference. Every domain file has three layers:
+
+```ts
+// 1. Key factory — the single source of key structure
+export const userKeys = { ... };
+
+// 2. queryOptions factories — key + queryFn together, fully typed,
+//    reusable in useQuery / prefetchQuery / setQueryData
+export const userQueries = {
+  detail: (id: number) =>
+    queryOptions({
+      queryKey: userKeys.detail(id),
+      queryFn: () => fetcher(api.getUser(id)),
+    }),
+};
+
+// 3. Hooks consumed by screens
+export function useUserQuery(id: number) {
+  return useQuery(userQueries.detail(id));
 }
 ```
 
-Mutation:
+Mutations invalidate by key prefix:
 
 ```ts
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { api } from '@/api/client';
-import { fetcher } from '@/api/fetcher';
-import { QueryKey } from '@/types/enums';
-import type { LoginRequest } from '@/types/api';
-
-export function useLoginMutation() {
+export function useUpdateUserMutation() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (params: LoginRequest) => fetcher(api.login(params)),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QueryKey.User] });
+    mutationFn: (params: UpdateUserRequest) => fetcher(api.updateUser(params)),
+    onSuccess: (_data, { id }) => {
+      queryClient.invalidateQueries({ queryKey: userKeys.detail(id) });
     },
   });
 }
@@ -61,33 +83,18 @@ api.getUser(id); // → Promise<AxiosResponse<UserResponse>>
 fetcher(api.getUser(id)); // → Promise<UserResponse>
 ```
 
-API methods live in `src/api/client.ts` using raw `axiosInstance.*` calls. See the commented example there.
+API methods live in `src/api/client.ts` using raw `axiosInstance.*` calls — the transport layer stays React-free; caching policy lives here.
 
 ## Folder Structure
 
-Flat (few hooks):
-
 ```
-src/hooks/query/
-├── useUserQuery.ts
-└── useLoginMutation.ts
-```
-
-Grouped by resource (many hooks):
-
-```
-src/hooks/query/
-├── user/
-│   ├── useUserQuery.ts
-│   └── useLoginMutation.ts
-├── products/
-│   ├── useProductsQuery.ts
-│   └── useCreateProductMutation.ts
-└── ...
+src/features/[name]/queries.ts    # domain used by a single feature (default)
+src/hooks/query/[domain].ts       # promoted: domain used by 2+ features
 ```
 
 ## Docs
 
 - [TanStack React Query v5](https://tanstack.com/query/latest)
-- [useQuery](https://tanstack.com/query/latest/docs/framework/react/reference/useQuery)
-- [useMutation](https://tanstack.com/query/latest/docs/framework/react/reference/useMutation)
+- [Query Options](https://tanstack.com/query/latest/docs/framework/react/guides/query-options)
+- [Query Invalidation](https://tanstack.com/query/latest/docs/framework/react/guides/query-invalidation)
+- [Effective React Query Keys (TkDodo)](https://tkdodo.eu/blog/effective-react-query-keys)

@@ -19,4 +19,7 @@ export const axiosInstance = axios.create({
 export const api = {
   login: (params: T.LoginRequest) =>
     axiosInstance.post<T.LoginResponse>('auth/login', params),
+  getUser: (id: number) => axiosInstance.get<T.UserResponse>(`users/${id}`),
+  updateUser: ({ id, ...body }: T.UpdateUserRequest) =>
+    axiosInstance.patch<T.UserResponse>(`users/${id}`, body),
 } as const;
