@@ -6,4 +6,3 @@ export {
   zustandStorage,
 } from './storage';
 export { validateEnv } from './validateEnv';
-export { zod4Resolver } from './zodResolver';

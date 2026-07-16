@@ -34,9 +34,9 @@ src/schemas/
 
 ## Using Schemas with Forms
 
-Schemas double as form validators via `zod4Resolver` from `@/utils`.
+Schemas double as form validators via `zodResolver` from `@hookform/resolvers/zod`.
 
-> **Why a custom resolver?** `@hookform/resolvers` doesn't support Zod v4 yet. Use `zod4Resolver` from `@/utils` instead.
+> Zod v4 is officially supported by `@hookform/resolvers` since v5.1.0 — no custom resolver is needed.
 
 ### Step 1 — Define the schema in `src/schemas/`
 
@@ -58,7 +58,7 @@ export type SignInFields = z.infer<typeof signInSchema>;
 import { Controller, useForm } from 'react-hook-form';
 import { TextInput } from 'react-native';
 
-import { zod4Resolver } from '@/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { type SignInFields, signInSchema } from '@/schemas';
 
@@ -68,7 +68,7 @@ export function SignInScreen() {
     handleSubmit,
     formState: { errors },
   } = useForm<SignInFields>({
-    resolver: zod4Resolver(signInSchema),
+    resolver: zodResolver(signInSchema),
   });
 
   const onSubmit = (data: SignInFields) => {
