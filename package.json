@@ -1,7 +1,7 @@
 {
   "name": "react-native_zd_v1",
   "main": "index.ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "start": "expo start",
     "lint": "expo lint",
