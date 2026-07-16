@@ -22,15 +22,14 @@ Every utility function and every shared component **must** have a test file.
 
 ### Not Required
 
-| What                      | Why                                                           |
-| ------------------------- | ------------------------------------------------------------- |
-| Zod schemas               | TypeScript + Zod runtime validation already catches issues    |
-| Custom hooks              | Test indirectly through the components/screens that use them  |
-| React Query hooks         | Test indirectly; mock at the API level, not at the hook level |
-| Route files (`src/app/`)  | Thin re-exports — nothing to test                             |
-| Barrel files (`index.ts`) | Zero logic                                                    |
-| Theme / config            | Static objects — TypeScript is enough                         |
-| Snapshot tests            | Fragile, break on any style change, give false confidence     |
+| What                     | Why                                                           |
+| ------------------------ | ------------------------------------------------------------- |
+| Zod schemas              | TypeScript + Zod runtime validation already catches issues    |
+| Custom hooks             | Test indirectly through the components/screens that use them  |
+| React Query hooks        | Test indirectly; mock at the API level, not at the hook level |
+| Route files (`src/app/`) | Thin re-exports — nothing to test                             |
+| Theme / config           | Static objects — TypeScript is enough                         |
+| Snapshot tests           | Fragile, break on any style change, give false confidence     |
 
 ## Conventions
 
@@ -121,7 +120,7 @@ describe('fetcher', () => {
 ```tsx
 import { render, fireEvent } from '@tests/test-utils';
 
-import { ErrorFallback } from '@/ui/components';
+import { ErrorFallback } from '@/ui/components/ErrorFallback';
 
 describe('ErrorFallback', () => {
   const error = new Error('Something broke');

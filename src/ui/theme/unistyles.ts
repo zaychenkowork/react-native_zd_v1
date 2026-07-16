@@ -3,9 +3,9 @@ import { StyleSheet } from 'react-native-unistyles';
 
 import { storage } from '@/utils/storage';
 
-import type { ThemeName } from '@/types';
+import type { ThemeName } from '@/types/common';
 
-import { STORAGE_KEYS } from '@/constants';
+import { STORAGE_KEYS } from '@/constants/storageKeys';
 
 import { darkColors, lightColors } from './colors';
 import { fontSizes, fontWeights } from './fonts';

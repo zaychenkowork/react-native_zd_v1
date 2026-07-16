@@ -60,6 +60,11 @@ module.exports = defineConfig([
           message:
             'Use Env from env.ts or CONFIG from @/config instead of process.env',
         },
+        {
+          selector: 'ExportAllDeclaration',
+          message:
+            'No barrel re-exports (export * from). Import from concrete modules instead.',
+        },
       ],
     },
   },

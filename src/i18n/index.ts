@@ -5,7 +5,7 @@ import { I18nManager, Platform } from 'react-native';
 
 import { storage } from '@/utils/storage';
 
-import { STORAGE_KEYS } from '@/constants';
+import { STORAGE_KEYS } from '@/constants/storageKeys';
 
 import { type Language, resources, supportedLanguages } from './resources';
 

@@ -11,14 +11,13 @@ alwaysApply: false
 ```
 src/ui/
 ├── primitives/      ← copy-pasted source from github.com/roninoss/rn-primitives (no styles)
-│   ├── checkbox.tsx ← raw headless source, no Unistyles, no className
-│   └── index.ts
+│   └── checkbox.tsx ← raw headless source, no Unistyles, no className
 ├── components/      ← styled components: primitive + Unistyles, or adapted rnr source
-│   ├── Checkbox/
-│   │   └── index.tsx
-│   └── index.ts
+│   └── Checkbox.tsx
 └── theme/           ← colors, spacing, fonts, breakpoints (read-only reference)
 ```
+
+> No barrel files (`index.ts` re-exports) — one flat file per component, imported by its concrete path.
 
 ---
 
@@ -46,7 +45,7 @@ from GitHub      (Button, Badge, Card, Input…)
       │          reactnativereusables GitHub:
       │          .../new-york/components/ui/<name>.tsx
       │          Convert NativeWind → Unistyles (STEP 2)
-      │          Save directly to src/ui/components/<Name>/index.tsx
+      │          Save directly to src/ui/components/<Name>.tsx
       │
 Save to src/ui/primitives/<name>.tsx (no styles)
 Then go to STEP 3 → create styled component in src/ui/components/
@@ -205,9 +204,8 @@ For components that have a primitive in `src/ui/primitives/`, create the styled 
 | What | Where |
 |---|---|
 | Headless primitive (from rn-primitives) | `src/ui/primitives/<name>.tsx` |
-| Styled component | `src/ui/components/<ComponentName>/index.tsx` |
-| Plain component (from rnr, no primitive) | `src/ui/components/<ComponentName>/index.tsx` |
-| Barrel export | `src/ui/components/index.ts` |
+| Styled component | `src/ui/components/<ComponentName>.tsx` |
+| Plain component (from rnr, no primitive) | `src/ui/components/<ComponentName>.tsx` |
 
 ### Code rules
 

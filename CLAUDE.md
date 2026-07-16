@@ -41,7 +41,7 @@ Production-grade Expo SDK 56 / React Native 0.85 template — file-based routing
 
 ```tsx
 // src/app/(app)/posts/index.tsx
-import { PostsScreen } from '@/features/posts';
+import { PostsScreen } from '@/features/posts/screens/PostsScreen';
 export default PostsScreen;
 ```
 
@@ -51,29 +51,27 @@ No logic, no hooks, no JSX in route files.
 
 ```
 src/features/[name]/
-├── screens/[Name]Screen/   # Screen entry points
-├── components/[Name]/      # Feature-specific UI
-├── hooks/                  # (optional) feature-local hooks
-├── types.ts                # (optional) shared feature types
-└── index.ts                # Barrel re-export
+├── screens/[Name]Screen.tsx   # Screen entry points
+├── components/[Name].tsx      # Feature-specific UI
+├── hooks/                     # (optional) feature-local hooks
+└── types.ts                   # (optional) shared feature types
 ```
 
 Feature-local hooks live in `features/[name]/hooks/`; promote to `src/hooks/` only when reused across features.
 
-### Component = folder
+### Component = flat file
 
-Every component (in features, ui/components, anywhere) is a folder:
+Every component (in features, ui/components, anywhere) is a single `.tsx` file named after the component. Export the props type from the same file:
 
+```tsx
+// src/ui/components/ComponentName.tsx
+export type ComponentNameProps = { ... };
+export function ComponentName(props: ComponentNameProps) { ... }
 ```
-ComponentName/
-├── ComponentName.tsx
-├── types.ts        # Props and local enums — never inline in the .tsx
-└── index.ts        # Barrel re-export
-```
 
-### Barrel re-exports
+### No barrel files
 
-Every folder has an `index.ts`. Import from the barrel, not from the implementation file.
+Never create `index.ts` re-export barrels; always import from the concrete module (`@/store/useAuthStore`, `@/ui/components/Icon`). Barrels hurt Metro bundling/resolution and fast refresh — see [TkDodo](https://tkdodo.eu/blog/please-stop-using-barrel-files), [Marvin Hagemeister](https://marvinh.dev/blog/speeding-up-javascript-ecosystem-part-7/), [Ignite v11 release notes](https://github.com/infinitered/ignite/releases/tag/v11.0.0), [Obytes starter](https://starter.obytes.com/getting-started/project-structure/). ESLint bans `export * from` as a guard.
 
 ### Types location
 
@@ -116,10 +114,11 @@ One store per file: `use[Name]Store.ts` in `src/store/`.
 ### React Query — one hook per resource
 
 Hook files live in `src/hooks/query/`, named `use[Resource]Query.ts` or `use[Action]Mutation.ts`.
-Always wrap API calls with `fetcher()` from `@/api` to unwrap `AxiosResponse<T>` → `T`:
+Always wrap API calls with `fetcher()` from `@/api/fetcher` to unwrap `AxiosResponse<T>` → `T`:
 
 ```ts
-import { api, fetcher } from '@/api';
+import { api } from '@/api/client';
+import { fetcher } from '@/api/fetcher';
 queryFn: () => fetcher(api.getUser(id));
 ```
 
@@ -151,7 +150,7 @@ Jest 29 (pinned by `jest-expo`) + React Native Testing Library v14. Tests live u
 
 **Recommended (not required):** critical screens (auth, onboarding, checkout), non-trivial Zustand stores.
 
-**Not tested:** Zod schemas, React Query hooks, route files, barrel files, theme/config.
+**Not tested:** Zod schemas, React Query hooks, route files, theme/config.
 
 Use `render` from `@tests/test-utils` (not from RNTL directly) — it wraps with QueryClient and other providers. Query by role/text, not by `testId`. Test name pattern: _what + when + expected result_.
 

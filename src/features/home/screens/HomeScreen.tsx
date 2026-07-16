@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
-import { useAuthStore } from '@/store';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export function HomeScreen() {
   const { t } = useTranslation();

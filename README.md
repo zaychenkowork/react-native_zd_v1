@@ -206,26 +206,32 @@ Each feature is a self-contained module with screens, components, and optional l
 ```
 features/posts/
 ├── screens/            # Screen components (entry points)
-│   └── PostsScreen/
+│   └── PostsScreen.tsx
 ├── components/         # Feature-specific UI components
-│   └── PostCard/
+│   └── PostCard.tsx
 ├── hooks/              # (optional) Feature-local hooks
-├── types.ts            # (optional) Shared feature types
-└── index.ts
+└── types.ts            # (optional) Shared feature types
 ```
 
 ### Component Structure
 
-Every component (in `features/`, `ui/components/`, anywhere) is a **folder**:
+Every component (in `features/`, `ui/components/`, anywhere) is a **single flat file** named after the component. Props types live in the same file, exported next to the component:
 
-```
-ComponentName/
-├── ComponentName.tsx
-├── types.ts            # Props, local enums (or ComponentName.types.ts)
-└── index.ts            # Barrel re-export
+```tsx
+// src/ui/components/ComponentName.tsx
+export type ComponentNameProps = { ... };
+
+export function ComponentName(props: ComponentNameProps) { ... }
 ```
 
-Types are always extracted into a separate file next to the component, never inline.
+### No Barrel Files
+
+This template deliberately has **no `index.ts` re-export barrels** — always import from the concrete module (`@/ui/components/Icon`, `@/store/useAuthStore`). Barrels slow down Metro bundling and resolution, break tree-shaking, and cause fast-refresh cascades. This matches the current ecosystem consensus:
+
+- [Please Stop Using Barrel Files — TkDodo (TanStack maintainer)](https://tkdodo.eu/blog/please-stop-using-barrel-files)
+- [Speeding up the JavaScript ecosystem — the barrel file debacle (Marvin Hagemeister)](https://marvinh.dev/blog/speeding-up-javascript-ecosystem-part-7/)
+- [Ignite v11 removed all barrel files for Metro performance](https://github.com/infinitered/ignite/releases/tag/v11.0.0)
+- [Obytes starter bans barrel exports (fast-refresh issues)](https://starter.obytes.com/getting-started/project-structure/)
 
 ### State Management
 
@@ -345,11 +351,10 @@ Header max length: **150 characters**. Config: `commitlint.config.js`
 | Rule                        | Description                                                        |
 | --------------------------- | ------------------------------------------------------------------ |
 | Thin route files            | `app/` only imports screens from `features/` — no logic            |
-| Component = folder          | Every component is a folder with `.tsx`, `types.ts`, `index.ts`    |
-| Types next to component     | Props and local enums in `types.ts` beside the component           |
+| Component = flat file       | One `.tsx` file per component, props type exported from it         |
 | One store per file          | `use[Name]Store.ts` — see `src/docs/store.md`                      |
 | One query hook per resource | `use[Resource]Query.ts` — see `src/docs/hooks-query.md`            |
-| Re-export from index        | Every folder has an `index.ts` barrel file                         |
+| No barrel files             | Import from concrete modules, never from `index.ts` re-exports     |
 | Selectors only              | Never subscribe to the whole Zustand store                         |
 | Typed routes                | All routes are type-safe via Expo Router                           |
 | Feature-local hooks         | Keep in `features/[name]/hooks/`; move to `src/hooks/` when reused |

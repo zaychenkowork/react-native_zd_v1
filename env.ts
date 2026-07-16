@@ -1,6 +1,6 @@
 import { validateEnv } from '@/utils/validateEnv';
 
-import { type Env as EnvType, envSchema } from '@/schemas';
+import { type Env as EnvType, envSchema } from '@/schemas/env';
 
 import packageJSON from './package.json';
 

@@ -4,7 +4,7 @@ import { useMMKVString } from 'react-native-mmkv';
 
 import { storage } from '@/utils/storage';
 
-import { STORAGE_KEYS } from '@/constants';
+import { STORAGE_KEYS } from '@/constants/storageKeys';
 
 import type { Language } from '@/i18n/resources';
 import { supportedLanguages } from '@/i18n/resources';

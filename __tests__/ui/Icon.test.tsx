@@ -1,7 +1,7 @@
 import { render } from '@tests/test-utils';
 
 import { ICONS } from '@/ui/assets/icons';
-import { Icon } from '@/ui/components';
+import { Icon } from '@/ui/components/Icon';
 
 describe('Icon', () => {
   it('returns null for an unknown icon name', async () => {

@@ -2,7 +2,10 @@ import { useTranslation } from 'react-i18next';
 import { Pressable, Text, View } from 'react-native';
 import { StyleSheet } from 'react-native-unistyles';
 
-import type { ErrorFallbackProps } from './types';
+export type ErrorFallbackProps = {
+  error: Error;
+  onRetry?: () => void;
+};
 
 export function ErrorFallback({ error, onRetry }: ErrorFallbackProps) {
   const { t } = useTranslation();

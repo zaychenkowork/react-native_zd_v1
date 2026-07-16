@@ -6,9 +6,8 @@ Axios instance, API methods, and the `fetcher` utility for React Query.
 
 ```
 src/api/
-├── api.ts       # Axios instance + endpoint methods
+├── client.ts    # Axios instance + endpoint methods
 ├── fetcher.ts   # Unwraps AxiosResponse<T> → T
-└── index.ts     # Barrel re-export
 ```
 
 ## Conventions
@@ -29,7 +28,7 @@ When your API uses JWT with access + refresh tokens, add Axios interceptors to h
 Pull the access token from Zustand and add it to every outgoing request:
 
 ```ts
-import { useAuthStore } from '@/store';
+import { useAuthStore } from '@/store/useAuthStore';
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -49,7 +48,7 @@ Intercept 401 responses, refresh the token, and retry the original request:
 
 ```ts
 import axios from 'axios';
-import { signOut, useAuthStore } from '@/store';
+import { signOut, useAuthStore } from '@/store/useAuthStore';
 
 axiosInstance.interceptors.response.use(
   (response) => response,

@@ -2,7 +2,8 @@ import { useReactQueryDevTools } from '@dev-plugins/react-query';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 
-import { useAppFocusManager, useOnlineManager } from '@/hooks';
+import { useAppFocusManager } from '@/hooks/app/useAppFocusManager';
+import { useOnlineManager } from '@/hooks/app/useOnlineManager';
 
 import { QUERY_CONFIG } from '@/config';
 

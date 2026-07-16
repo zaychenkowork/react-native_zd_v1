@@ -1,8 +1,8 @@
 import { fireEvent, render, waitFor } from '@tests/test-utils';
 
-import { useAuthStore } from '@/store';
+import { useAuthStore } from '@/store/useAuthStore';
 
-import { SignInScreen } from '@/features/auth';
+import { SignInScreen } from '@/features/auth/screens/SignInScreen';
 
 beforeEach(() => {
   useAuthStore.setState({ accessToken: null, refreshToken: null });

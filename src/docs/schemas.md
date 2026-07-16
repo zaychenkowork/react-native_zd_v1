@@ -4,11 +4,11 @@ Zod schemas for runtime validation and type inference. Used for env validation (
 
 ## Conventions
 
-| Rule                     | Description                               |
-| ------------------------ | ----------------------------------------- |
-| One schema per domain    | `[domain].ts` (e.g., `env.ts`, `user.ts`) |
-| Re-export from index     | All schemas go through `index.ts`         |
-| Infer types from schemas | `type Foo = z.infer<typeof fooSchema>`    |
+| Rule                     | Description                                   |
+| ------------------------ | --------------------------------------------- |
+| One schema per domain    | `[domain].ts` (e.g., `env.ts`, `user.ts`)     |
+| Direct imports           | Import schemas from their module — no barrels |
+| Infer types from schemas | `type Foo = z.infer<typeof fooSchema>`        |
 
 ## Quick Example
 
@@ -28,7 +28,6 @@ export type User = z.infer<typeof userSchema>;
 
 ```
 src/schemas/
-├── index.ts
 └── env.ts
 ```
 
@@ -60,7 +59,7 @@ import { TextInput } from 'react-native';
 
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { type SignInFields, signInSchema } from '@/schemas';
+import { type SignInFields, signInSchema } from '@/schemas/signIn';
 
 export function SignInScreen() {
   const {

@@ -1,4 +1,4 @@
-import { STORAGE_KEYS } from '@/constants';
+import { STORAGE_KEYS } from '@/constants/storageKeys';
 
 // Shared app-level types (non-API, non-enum)
 // Example:

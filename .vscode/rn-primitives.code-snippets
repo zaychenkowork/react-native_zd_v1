@@ -43,6 +43,6 @@
       "}));",
       ""
     ],
-    "description": "Styled component in src/ui/components/<Name>/index.tsx — imports from local primitives folder"
+    "description": "Styled component in src/ui/components/<Name>.tsx — imports from local primitives folder"
   }
 }

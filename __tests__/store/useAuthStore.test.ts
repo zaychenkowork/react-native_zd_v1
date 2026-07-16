@@ -1,4 +1,4 @@
-import { signIn, signOut, useAuthStore } from '@/store';
+import { signIn, signOut, useAuthStore } from '@/store/useAuthStore';
 
 beforeEach(() => {
   useAuthStore.setState({ accessToken: null, refreshToken: null });

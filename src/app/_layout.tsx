@@ -8,13 +8,13 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { ErrorFallback } from '@/ui/components';
+import { ErrorFallback } from '@/ui/components/ErrorFallback';
 
-import { useAppReady } from '@/hooks';
+import { useAppReady } from '@/hooks/app/useAppReady';
 
-import { QueryProvider } from '@/providers';
+import { QueryProvider } from '@/providers/QueryProvider';
 
-import { useAuthStore } from '@/store';
+import { useAuthStore } from '@/store/useAuthStore';
 
 Sentry.init({
   dsn: Env.EXPO_PUBLIC_SENTRY_DSN, // empty DSN disables the SDK
