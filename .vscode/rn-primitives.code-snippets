@@ -10,7 +10,7 @@
       "export type { ${1:ComponentName}RootProps } from '@rn-primitives/${3:package-name}';",
       ""
     ],
-    "description": "Primitive wrapper file in src/ui/primitives/<name>.tsx"
+    "description": "Primitive wrapper file in src/components/primitives/<name>.tsx"
   },
   "RN Styled Component from Local Primitive": {
     "prefix": ["rnui", "styled-component"],
@@ -18,8 +18,8 @@
       "import React from 'react';",
       "import { StyleSheet } from 'react-native-unistyles';",
       "",
-      "import { ${1:ComponentName}Root } from '@/ui/primitives/${2:primitive-name}';",
-      "import type { ${1:ComponentName}RootProps } from '@/ui/primitives/${2:primitive-name}';",
+      "import { ${1:ComponentName}Root } from '@/components/primitives/${2:primitive-name}';",
+      "import type { ${1:ComponentName}RootProps } from '@/components/primitives/${2:primitive-name}';",
       "",
       "type Props = ${1:ComponentName}RootProps;",
       "",
@@ -43,6 +43,6 @@
       "}));",
       ""
     ],
-    "description": "Styled component in src/ui/components/<Name>/index.tsx — imports from local primitives folder"
+    "description": "Styled component in src/components/ui/<Name>.tsx — imports from local primitives folder"
   }
 }

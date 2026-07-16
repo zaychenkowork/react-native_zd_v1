@@ -1,26 +1,34 @@
-import '@/i18n';
+import '@/i18n/i18n';
 
-import Bugsnag from '@bugsnag/expo';
-import BugsnagPerformance from '@bugsnag/expo-performance';
+import Env from '@env';
+import * as Sentry from '@sentry/react-native';
 import { type ErrorBoundaryProps, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { ErrorFallback } from '@/ui/components';
+import { ErrorFallback } from '@/components/ui/ErrorFallback';
 
-import { useAppReady } from '@/hooks';
+import { useAppReady } from '@/hooks/app/useAppReady';
 
-import { QueryProvider } from '@/providers';
+import { QueryProvider } from '@/providers/QueryProvider';
 
-import { useAuthStore } from '@/store';
+import { useAuthStore } from '@/store/useAuthStore';
+
+Sentry.init({
+  dsn: Env.EXPO_PUBLIC_SENTRY_DSN, // empty DSN disables the SDK
+  enabled: !!Env.EXPO_PUBLIC_SENTRY_DSN,
+  environment: Env.EXPO_PUBLIC_RUN_MODE,
+  // Performance tracing sample rate — tune down in production if volume is high.
+  tracesSampleRate: 1.0,
+});
 
 SplashScreen.preventAutoHideAsync();
 
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   useEffect(() => {
-    Bugsnag.notify(error);
+    Sentry.captureException(error);
   }, [error]);
 
   return <ErrorFallback error={error} onRetry={retry} />;
@@ -57,4 +65,4 @@ function RootNavigator() {
   );
 }
 
-export default BugsnagPerformance.withInstrumentedAppStarts(RootLayout);
+export default Sentry.wrap(RootLayout);

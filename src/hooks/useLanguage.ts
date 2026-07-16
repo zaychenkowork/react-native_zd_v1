@@ -4,7 +4,7 @@ import { useMMKVString } from 'react-native-mmkv';
 
 import { storage } from '@/utils/storage';
 
-import { STORAGE_KEYS } from '@/constants';
+import { STORAGE_KEYS } from '@/constants/storageKeys';
 
 import type { Language } from '@/i18n/resources';
 import { supportedLanguages } from '@/i18n/resources';
@@ -14,7 +14,7 @@ import { supportedLanguages } from '@/i18n/resources';
  *
  * RTL support is not enabled — no RTL languages are configured yet.
  * When adding an RTL language (e.g. Arabic, Hebrew), uncomment the RTL
- * logic in `src/i18n/index.ts` and restore direction switching here.
+ * logic in `src/i18n/i18n.ts` and restore direction switching here.
  * Direction changes require a JS reload; use `expo-updates` for OTA reload
  * or prompt the user to restart.
  *

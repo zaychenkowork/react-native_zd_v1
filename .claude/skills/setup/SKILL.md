@@ -25,12 +25,12 @@ cp .env.example .env
 
 Open `.env` and fill in the four variables:
 
-| Variable                      | Description                                    |
-| ----------------------------- | ---------------------------------------------- |
-| `EXPO_PUBLIC_RUN_MODE`        | `dev` / `stg` / `prod`                         |
-| `EXPO_PUBLIC_API_URL`         | Your API base URL                              |
-| `EXPO_PUBLIC_BUGSNAG_API_KEY` | BugSnag API key (leave empty to disable)       |
-| `STRICT_ENV_VALIDATION`       | `true` to enable Zod env check before prebuild |
+| Variable                 | Description                                    |
+| ------------------------ | ---------------------------------------------- |
+| `EXPO_PUBLIC_RUN_MODE`   | `dev` / `stg` / `prod`                         |
+| `EXPO_PUBLIC_API_URL`    | Your API base URL                              |
+| `EXPO_PUBLIC_SENTRY_DSN` | Sentry DSN (leave empty to disable)            |
+| `STRICT_ENV_VALIDATION`  | `true` to enable Zod env check before prebuild |
 
 ---
 
@@ -89,6 +89,15 @@ Also update the `slug` field on the `ExpoConfig` object:
 | Field  | Current placeholder | What to set                                      |
 | ------ | ------------------- | ------------------------------------------------ |
 | `slug` | `'your-app-slug'`   | Your app slug (lowercase, hyphens — matches EAS) |
+
+If you use Sentry, also replace the placeholders in the `@sentry/react-native/expo` plugin entry (marked `// ⚠️ REPLACE`):
+
+| Field          | Current placeholder     | What to set                   |
+| -------------- | ----------------------- | ----------------------------- |
+| `organization` | `'your-sentry-org'`     | Your Sentry organization slug |
+| `project`      | `'your-sentry-project'` | Your Sentry project slug      |
+
+For source maps upload on EAS builds, set `SENTRY_AUTH_TOKEN` as an EAS secret (`eas env:create --name SENTRY_AUTH_TOKEN`). If you don't use Sentry, leave `EXPO_PUBLIC_SENTRY_DSN` empty — the SDK stays disabled.
 
 ---
 
@@ -176,6 +185,7 @@ After the first build, `yarn start` connects to the dev client automatically —
 - [ ] `.env` created from `.env.example` with real values
 - [ ] `env.ts`: `BUNDLE_IDS`, `PACKAGES`, `SCHEMES`, `NAME` updated
 - [ ] `app.config.ts`: `EXPO_ACCOUNT_OWNER`, `EAS_PROJECT_ID`, `slug` updated
+- [ ] `app.config.ts`: Sentry `organization` / `project` set (or DSN left empty to disable)
 - [ ] `eas.json`: `EXPO_PUBLIC_API_URL` replaced in all three build profiles
 - [ ] `eas.json`: `ascAppId` set (if submitting to App Store)
 - [ ] `eas login` done, `eas init` run

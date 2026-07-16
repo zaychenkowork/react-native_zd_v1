@@ -1,6 +1,8 @@
-const { getDefaultConfig } = require('expo/metro-config');
+const { getSentryExpoConfig } = require('@sentry/react-native/metro');
 
-const config = getDefaultConfig(__dirname);
+// Sentry wraps Expo's default Metro config to enable source map upload
+// and debug ID injection. It is a superset of `expo/metro-config`.
+const config = getSentryExpoConfig(__dirname);
 
 const { transformer, resolver } = config;
 

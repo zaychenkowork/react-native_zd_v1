@@ -9,7 +9,7 @@ Jest + React Native Testing Library for unit and component tests.
 | What                                     | Type             | Why                                                 |
 | ---------------------------------------- | ---------------- | --------------------------------------------------- |
 | **Utilities** (`src/utils/`)             | Unit             | Pure functions with no UI — fast, stable, high ROI  |
-| **UI components** (`src/ui/components/`) | Unit / Component | Reusable across the app — regressions are expensive |
+| **UI components** (`src/components/ui/`) | Unit / Component | Reusable across the app — regressions are expensive |
 
 Every utility function and every shared component **must** have a test file.
 
@@ -22,15 +22,14 @@ Every utility function and every shared component **must** have a test file.
 
 ### Not Required
 
-| What                      | Why                                                           |
-| ------------------------- | ------------------------------------------------------------- |
-| Zod schemas               | TypeScript + Zod runtime validation already catches issues    |
-| Custom hooks              | Test indirectly through the components/screens that use them  |
-| React Query hooks         | Test indirectly; mock at the API level, not at the hook level |
-| Route files (`src/app/`)  | Thin re-exports — nothing to test                             |
-| Barrel files (`index.ts`) | Zero logic                                                    |
-| Theme / config            | Static objects — TypeScript is enough                         |
-| Snapshot tests            | Fragile, break on any style change, give false confidence     |
+| What                     | Why                                                           |
+| ------------------------ | ------------------------------------------------------------- |
+| Zod schemas              | TypeScript + Zod runtime validation already catches issues    |
+| Custom hooks             | Test indirectly through the components/screens that use them  |
+| React Query hooks        | Test indirectly; mock at the API level, not at the hook level |
+| Route files (`src/app/`) | Thin re-exports — nothing to test                             |
+| Theme / config           | Static objects — TypeScript is enough                         |
+| Snapshot tests           | Fragile, break on any style change, give false confidence     |
 
 ## Conventions
 
@@ -74,8 +73,9 @@ __tests__/
 ├── test-utils.tsx                # renderWithProviders helper
 ├── utils/                        # Unit tests for src/utils/
 │   └── validateEnv.test.ts
-├── ui/                           # Component tests for src/ui/components/
-│   └── ErrorFallback.test.tsx
+├── components/
+│   └── ui/                       # Component tests for src/components/ui/
+│       └── ErrorFallback.test.tsx
 ├── store/                        # Store tests (recommended)
 │   └── useAuthStore.test.ts
 └── features/                     # Screen tests (critical flows only)
@@ -114,35 +114,37 @@ describe('fetcher', () => {
 });
 ```
 
-**Component test** (`__tests__/ui/ErrorFallback.test.tsx`):
+**Component test** (`__tests__/components/ui/ErrorFallback.test.tsx`):
+
+> RNTL v14 APIs are async: always `await render(...)`, `await fireEvent.press(...)`, `await act(...)`.
 
 ```tsx
 import { render, fireEvent } from '@tests/test-utils';
 
-import { ErrorFallback } from '@/ui/components';
+import { ErrorFallback } from '@/components/ui/ErrorFallback';
 
 describe('ErrorFallback', () => {
   const error = new Error('Something broke');
 
-  it('renders the error message', () => {
-    const { getByText } = render(<ErrorFallback error={error} />);
+  it('renders the error message', async () => {
+    const { getByText } = await render(<ErrorFallback error={error} />);
 
     expect(getByText('Something broke')).toBeTruthy();
   });
 
-  it('calls onRetry when the button is pressed', () => {
+  it('calls onRetry when the button is pressed', async () => {
     const onRetry = jest.fn();
-    const { getByRole } = render(
+    const { getByRole } = await render(
       <ErrorFallback error={error} onRetry={onRetry} />,
     );
 
-    fireEvent.press(getByRole('button'));
+    await fireEvent.press(getByRole('button'));
 
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
 
-  it('hides the retry button when onRetry is not provided', () => {
-    const { queryByRole } = render(<ErrorFallback error={error} />);
+  it('hides the retry button when onRetry is not provided', async () => {
+    const { queryByRole } = await render(<ErrorFallback error={error} />);
 
     expect(queryByRole('button')).toBeNull();
   });
@@ -151,6 +153,6 @@ describe('ErrorFallback', () => {
 
 ## Docs
 
-- [Jest 30](https://jestjs.io/docs/getting-started)
+- [Jest 29](https://jestjs.io/docs/getting-started)
 - [React Native Testing Library](https://callstack.github.io/react-native-testing-library/)
 - [Testing React Native (official)](https://reactnative.dev/docs/testing-overview)

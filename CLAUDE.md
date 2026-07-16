@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-Production-grade Expo SDK 54 / React Native 0.81 template — file-based routing (Expo Router), Unistyles v3 styling, React Query v5 server state, Zustand v5 client state, Zod v4 schemas, React Hook Form, MMKV storage, SecureStore for tokens, i18next localization, BugSnag error tracking.
+Production-grade Expo SDK 56 / React Native 0.85 template — file-based routing (Expo Router), Unistyles v3 styling, React Query v5 server state, Zustand v5 client state, Zod v4 schemas, React Hook Form, MMKV storage, SecureStore for tokens, i18next localization, Sentry error tracking.
 
-> Node >= 22. Uses a Dev Client — **Expo Go will not work** (MMKV, Unistyles v3, Reanimated, BugSnag require native modules).
+> Node >= 22. Uses a Dev Client — **Expo Go will not work** (MMKV, Unistyles v3, Reanimated, Sentry require native modules).
 
 ---
 
@@ -41,7 +41,7 @@ Production-grade Expo SDK 54 / React Native 0.81 template — file-based routing
 
 ```tsx
 // src/app/(app)/posts/index.tsx
-import { PostsScreen } from '@/features/posts';
+import { PostsScreen } from '@/features/posts/screens/PostsScreen';
 export default PostsScreen;
 ```
 
@@ -51,29 +51,36 @@ No logic, no hooks, no JSX in route files.
 
 ```
 src/features/[name]/
-├── screens/[Name]Screen/   # Screen entry points
-├── components/[Name]/      # Feature-specific UI
-├── hooks/                  # (optional) feature-local hooks
-├── types.ts                # (optional) shared feature types
-└── index.ts                # Barrel re-export
+├── screens/[Name]Screen.tsx   # Screen entry points
+├── components/[Name].tsx      # Feature-specific UI
+├── hooks/                     # (optional) feature-local hooks
+└── types.ts                   # (optional) shared feature types
 ```
 
 Feature-local hooks live in `features/[name]/hooks/`; promote to `src/hooks/` only when reused across features.
 
-### Component = folder
+### Component = flat file (folder only when complex)
 
-Every component (in features, ui/components, anywhere) is a folder:
+A component is a single `.tsx` file named after the component by default. Export the props type from the same file:
 
+```tsx
+// src/components/ui/ComponentName.tsx
+export type ComponentNameProps = { ... };
+export function ComponentName(props: ComponentNameProps) { ... }
 ```
-ComponentName/
-├── ComponentName.tsx
-├── types.ts        # Props and local enums — never inline in the .tsx
-└── index.ts        # Barrel re-export
-```
 
-### Barrel re-exports
+If a component genuinely needs multiple files (e.g. `Input` + `ControlledInput`, a multi-part `Calendar`), use a folder with explicitly named files — never `index.ts`: `src/components/ui/Input/Input.tsx`.
 
-Every folder has an `index.ts`. Import from the barrel, not from the implementation file.
+### Component tiers
+
+- `src/components/ui/` — design system, domain-free (Button, Input)
+- `src/components/primitives/` — copy-pasted headless rn-primitives sources
+- `src/components/` root — shared business components (domain-aware modals, forms) used by 2+ features
+- `features/[name]/components/` — feature-local; promote to `src/components/` when a second feature needs it
+
+### No barrel files
+
+Never create `index.ts` re-export barrels; always import from the concrete module (`@/store/useAuthStore`, `@/components/ui/Icon`). Barrels hurt Metro bundling/resolution and fast refresh — see [TkDodo](https://tkdodo.eu/blog/please-stop-using-barrel-files), [Marvin Hagemeister](https://marvinh.dev/blog/speeding-up-javascript-ecosystem-part-7/), [Ignite v11 release notes](https://github.com/infinitered/ignite/releases/tag/v11.0.0), [Obytes starter](https://starter.obytes.com/getting-started/project-structure/). ESLint bans `export * from` as a guard.
 
 ### Types location
 
@@ -98,7 +105,7 @@ const styles = StyleSheet.create((theme) => ({
 }));
 ```
 
-Colors, spacing, and radius always come from `theme.*` — never hardcoded. Theme config lives in `src/ui/theme/` (`colors.ts`, `fonts.ts`, `metrics.ts`, `unistyles.ts`).
+Colors, spacing, and radius always come from `theme.*` — never hardcoded. Theme config lives in `src/theme/` (`colors.ts`, `fonts.ts`, `metrics.ts`, `unistyles.ts`).
 
 ### Zustand — selectors only
 
@@ -116,16 +123,17 @@ One store per file: `use[Name]Store.ts` in `src/store/`.
 ### React Query — one hook per resource
 
 Hook files live in `src/hooks/query/`, named `use[Resource]Query.ts` or `use[Action]Mutation.ts`.
-Always wrap API calls with `fetcher()` from `@/api` to unwrap `AxiosResponse<T>` → `T`:
+Always wrap API calls with `fetcher()` from `@/api/fetcher` to unwrap `AxiosResponse<T>` → `T`:
 
 ```ts
-import { api, fetcher } from '@/api';
+import { api } from '@/api/client';
+import { fetcher } from '@/api/fetcher';
 queryFn: () => fetcher(api.getUser(id));
 ```
 
 ### Environment access
 
-- **App code**: import `CONFIG` from `@/config` — never `process.env`
+- **App code**: import `CONFIG` from `@/config/config` — never `process.env`
 - **`app.config.ts` / `env.ts` only**: import `Env` from `env.ts`
 - `process.env` is blocked everywhere else by an ESLint rule (`no-restricted-syntax`)
 
@@ -135,23 +143,23 @@ Auth tokens (access + refresh) live in **SecureStore** (iOS Keychain / Android K
 
 ### Forms
 
-Use `zod4Resolver` from `@/utils` (not `@hookform/resolvers` — it doesn't support Zod v4 yet). Define schemas in `src/schemas/`, infer types with `z.infer<>`.
+Use `zodResolver` from `@hookform/resolvers/zod` (Zod v4 is officially supported since v5.1.0). Define schemas in `src/schemas/`, infer types with `z.infer<>`.
 
 ### Imports order (ESLint-enforced)
 
-`simple-import-sort` enforces: side effects → node builtins → external packages → `@/ui` → `@/hooks` → `@/providers` → `@/utils` → `@/api` → `@/store` → `@/types` → `@/constants` → `@/schemas` → `@/config` → `@/` other → relative.
+`simple-import-sort` enforces: side effects → node builtins → external packages → `@/components` → `@/theme`/`@/assets` → `@/hooks` → `@/providers` → `@/utils` → `@/api` → `@/store` → `@/types` → `@/constants` → `@/schemas` → `@/config` → `@/` other → relative.
 
 ---
 
 ## Testing
 
-Jest 30 + React Native Testing Library. Tests live under `__tests__/`, mirroring `src/` structure.
+Jest 29 (pinned by `jest-expo`) + React Native Testing Library v14. Tests live under `__tests__/`, mirroring `src/` structure. RNTL v14 APIs are async — `await render(...)`, `await fireEvent.press(...)`.
 
-**Required:** every `src/utils/` function and every `src/ui/components/` component must have a test.
+**Required:** every `src/utils/` function and every `src/components/ui/` component must have a test.
 
 **Recommended (not required):** critical screens (auth, onboarding, checkout), non-trivial Zustand stores.
 
-**Not tested:** Zod schemas, React Query hooks, route files, barrel files, theme/config.
+**Not tested:** Zod schemas, React Query hooks, route files, theme/config.
 
 Use `render` from `@tests/test-utils` (not from RNTL directly) — it wraps with QueryClient and other providers. Query by role/text, not by `testId`. Test name pattern: _what + when + expected result_.
 
@@ -190,7 +198,7 @@ Full rule: `.cursor/rules/conventional-commits.mdc`
 | `src/docs/api.md`                        | Axios instance, `fetcher()`, JWT refresh interceptor pattern                           |
 | `src/docs/hooks-query.md`                | React Query hook conventions, `fetcher()` usage, query key enums                       |
 | `src/docs/store.md`                      | Zustand store conventions, `useShallow` for multi-field selectors                      |
-| `src/docs/schemas.md`                    | Zod schema conventions, `zod4Resolver` for RHF                                         |
+| `src/docs/schemas.md`                    | Zod schema conventions, `zodResolver` for RHF                                          |
 | `src/docs/ui-components.md`              | UI component workflow: primitives vs components, Unistyles v3                          |
 | `src/docs/testing.md`                    | Full testing conventions, folder structure, examples                                   |
 | `src/docs/e2e.md`                        | Maestro E2E setup and how to run the smoke flow                                        |

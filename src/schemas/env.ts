@@ -4,7 +4,7 @@ export const envSchema = z.object({
   EXPO_PUBLIC_RUN_MODE: z.enum(['dev', 'stg', 'prod']),
 
   EXPO_PUBLIC_API_URL: z.url(),
-  EXPO_PUBLIC_BUGSNAG_API_KEY: z.string().default(''),
+  EXPO_PUBLIC_SENTRY_DSN: z.string().default(''),
 
   EXPO_PUBLIC_NAME: z.string(),
   EXPO_PUBLIC_SCHEME: z.string(),

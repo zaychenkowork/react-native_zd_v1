@@ -4,11 +4,11 @@ Zod schemas for runtime validation and type inference. Used for env validation (
 
 ## Conventions
 
-| Rule                     | Description                               |
-| ------------------------ | ----------------------------------------- |
-| One schema per domain    | `[domain].ts` (e.g., `env.ts`, `user.ts`) |
-| Re-export from index     | All schemas go through `index.ts`         |
-| Infer types from schemas | `type Foo = z.infer<typeof fooSchema>`    |
+| Rule                     | Description                                   |
+| ------------------------ | --------------------------------------------- |
+| One schema per domain    | `[domain].ts` (e.g., `env.ts`, `user.ts`)     |
+| Direct imports           | Import schemas from their module — no barrels |
+| Infer types from schemas | `type Foo = z.infer<typeof fooSchema>`        |
 
 ## Quick Example
 
@@ -28,15 +28,14 @@ export type User = z.infer<typeof userSchema>;
 
 ```
 src/schemas/
-├── index.ts
 └── env.ts
 ```
 
 ## Using Schemas with Forms
 
-Schemas double as form validators via `zod4Resolver` from `@/utils`.
+Schemas double as form validators via `zodResolver` from `@hookform/resolvers/zod`.
 
-> **Why a custom resolver?** `@hookform/resolvers` doesn't support Zod v4 yet. Use `zod4Resolver` from `@/utils` instead.
+> Zod v4 is officially supported by `@hookform/resolvers` since v5.1.0 — no custom resolver is needed.
 
 ### Step 1 — Define the schema in `src/schemas/`
 
@@ -58,9 +57,9 @@ export type SignInFields = z.infer<typeof signInSchema>;
 import { Controller, useForm } from 'react-hook-form';
 import { TextInput } from 'react-native';
 
-import { zod4Resolver } from '@/utils';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { type SignInFields, signInSchema } from '@/schemas';
+import { type SignInFields, signInSchema } from '@/schemas/signIn';
 
 export function SignInScreen() {
   const {
@@ -68,7 +67,7 @@ export function SignInScreen() {
     handleSubmit,
     formState: { errors },
   } = useForm<SignInFields>({
-    resolver: zod4Resolver(signInSchema),
+    resolver: zodResolver(signInSchema),
   });
 
   const onSubmit = (data: SignInFields) => {

@@ -1,7 +1,7 @@
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 
-import { loadAuthFromStorage, useAuthStore } from '@/store';
+import { loadAuthFromStorage, useAuthStore } from '@/store/useAuthStore';
 
 export function useAppReady() {
   const [isReady, setIsReady] = useState(false);

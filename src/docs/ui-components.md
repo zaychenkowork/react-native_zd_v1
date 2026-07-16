@@ -5,9 +5,10 @@ Inspired by [React Native Reusables](https://reactnativereusables.com/) and the 
 ## Two folders
 
 ```
-src/ui/
+src/components/
 ├── primitives/   ← headless skeletons, no styles
-└── components/   ← styled, ready-to-use components
+├── ui/           ← styled, ready-to-use design-system components (domain-free)
+└── <Shared>.tsx  ← shared business components used by 2+ features (domain-aware)
 ```
 
 ### `primitives/`
@@ -44,7 +45,7 @@ It tells the AI what to do when you ask to add a component:
 - install minimum deps at exact versions
 - if a design screen is attached — study all states, ask about anything unclear, then write code
 
-**The rule activates automatically** when any file from `src/ui/**/*.tsx` is open.
+**The rule activates automatically** when any file from `src/components/**/*.tsx` is open.
 
 **From anywhere else** — add `@rn-primitives` to the start of your message:
 

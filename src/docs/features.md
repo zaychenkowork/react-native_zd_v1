@@ -9,10 +9,9 @@ Route files in `src/app/` stay thin — they only import and re-export screen co
 | Rule                                  | Description                                                         |
 | ------------------------------------- | ------------------------------------------------------------------- |
 | One feature = one folder              | `src/features/[name]/`                                              |
-| Screens in `screens/` subfolder       | `screens/[Name]Screen/[Name]Screen.tsx`                             |
-| Components in `components/` subfolder | `components/[Name]/[Name].tsx`                                      |
-| Every component/screen is a folder    | Contains `.tsx`, `types.ts` (if needed), and `index.ts`             |
-| Re-export from index                  | Every folder has an `index.ts` barrel file                          |
+| Screens in `screens/` subfolder       | `screens/[Name]Screen.tsx` — one flat file per screen               |
+| Components in `components/` subfolder | `components/[Name].tsx` — one flat file per component               |
+| No barrel files                       | Import from concrete modules; never create `index.ts` re-exports    |
 | Feature-local hooks allowed           | `hooks/` inside feature; move to `src/hooks/` when reused elsewhere |
 
 ## Types
@@ -31,27 +30,19 @@ Single component in a folder — use `types.ts`. Multiple related components —
 src/features/
 ├── posts/
 │   ├── screens/
-│   │   ├── PostsScreen/
-│   │   │   ├── PostsScreen.tsx
-│   │   │   ├── types.ts
-│   │   │   └── index.ts
-│   │   ├── PostDetailScreen/
-│   │   │   ├── PostDetailScreen.tsx
-│   │   │   └── index.ts
-│   │   └── index.ts
+│   │   ├── PostsScreen.tsx
+│   │   └── PostDetailScreen.tsx
 │   ├── components/
-│   │   ├── PostCard/
-│   │   │   ├── PostCard.tsx
-│   │   │   ├── types.ts
-│   │   │   └── index.ts
-│   │   └── index.ts
+│   │   └── PostCard.tsx
 │   ├── hooks/                  # (optional) feature-local hooks
-│   │   ├── usePostFilters.ts
-│   │   └── index.ts
-│   ├── types.ts                # (optional) shared feature types
-│   └── index.ts
+│   │   └── usePostFilters.ts
+│   └── types.ts                # (optional) shared feature types
 └── ...
 ```
+
+> **No barrel files.** Import screens and components from their concrete paths
+> (`@/features/posts/screens/PostsScreen`). See the "No Barrel Files" section in the
+> root README for the reasoning and sources.
 
 ## Quick Example
 

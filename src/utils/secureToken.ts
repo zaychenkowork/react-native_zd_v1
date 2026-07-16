@@ -1,6 +1,6 @@
 import * as SecureStore from 'expo-secure-store';
 
-import { STORAGE_KEYS } from '@/constants';
+import { STORAGE_KEYS } from '@/constants/storageKeys';
 
 export type Tokens = {
   accessToken: string | null;

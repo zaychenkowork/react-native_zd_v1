@@ -22,8 +22,10 @@ module.exports = defineConfig([
             ['^node:'],
             // External packages (third-party)
             ['^@?\\w'],
-            // Internal: components (ui)
-            ['^@/ui'],
+            // Internal: components (design system, primitives, shared business)
+            ['^@/components'],
+            // Internal: theme and assets
+            ['^@/theme', '^@/assets'],
             // Internal: hooks
             ['^@/hooks'],
             // Internal: providers
@@ -58,7 +60,12 @@ module.exports = defineConfig([
           selector:
             "MemberExpression[object.name='process'][property.name='env']",
           message:
-            'Use Env from env.ts or CONFIG from @/config instead of process.env',
+            'Use Env from env.ts or CONFIG from @/config/config instead of process.env',
+        },
+        {
+          selector: 'ExportAllDeclaration',
+          message:
+            'No barrel re-exports (export * from). Import from concrete modules instead.',
         },
       ],
     },

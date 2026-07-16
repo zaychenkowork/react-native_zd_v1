@@ -39,7 +39,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   orientation: 'portrait',
   icon: './assets/icon.png',
 
-  newArchEnabled: true,
   ios: {
     supportsTablet: true,
     bundleIdentifier: Env.EXPO_PUBLIC_BUNDLE_ID,
@@ -52,11 +51,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#E6F4FE',
       foregroundImage: './assets/adaptive-icon.png',
     },
-    edgeToEdgeEnabled: true,
     package: Env.EXPO_PUBLIC_PACKAGE,
   },
   plugins: [
     'expo-router',
+    'expo-secure-store',
+    'expo-status-bar',
     [
       'expo-localization',
       {
@@ -78,9 +78,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       },
     ],
     ['app-icon-badge', appIconBadgeConfig],
-    ...(Env.EXPO_PUBLIC_BUGSNAG_API_KEY
-      ? ['@bugsnag/plugin-expo-eas-sourcemaps']
-      : []),
+    [
+      '@sentry/react-native/expo',
+      {
+        // ⚠️ REPLACE with your Sentry organization and project slugs.
+        // Source maps upload requires SENTRY_AUTH_TOKEN (set it as an EAS secret).
+        organization: 'your-sentry-org',
+        project: 'your-sentry-project',
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,
@@ -89,9 +95,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     // supportsRTL: true,
     eas: {
       projectId: EAS_PROJECT_ID,
-    },
-    bugsnag: {
-      apiKey: Env.EXPO_PUBLIC_BUGSNAG_API_KEY || undefined,
     },
   },
 });

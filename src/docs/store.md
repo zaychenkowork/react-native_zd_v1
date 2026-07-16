@@ -4,12 +4,12 @@ Zustand stores for client-side state (UI, auth, preferences). Server data lives 
 
 ## Conventions
 
-| Rule                 | Description                                       |
-| -------------------- | ------------------------------------------------- |
-| One store = one file | `use[Name]Store.ts`                               |
-| Re-export from index | All stores go through `index.ts`                  |
-| Always use selectors | `useStore((s) => s.field)`, never the whole store |
-| Actions inside store | No separate action files                          |
+| Rule                 | Description                                                        |
+| -------------------- | ------------------------------------------------------------------ |
+| One store = one file | `use[Name]Store.ts`                                                |
+| Direct imports       | `import { useAuthStore } from '@/store/useAuthStore'` — no barrels |
+| Always use selectors | `useStore((s) => s.field)`, never the whole store                  |
+| Actions inside store | No separate action files                                           |
 
 ## Quick Example
 
@@ -33,7 +33,6 @@ Auth tokens use SecureStore via `@/utils/secureToken`. For other persistence wit
 
 ```
 src/store/
-├── index.ts
 └── use[Name]Store.ts
 ```
 

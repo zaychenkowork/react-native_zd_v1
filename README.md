@@ -6,7 +6,7 @@ Expo-based React Native template with TypeScript, file-based routing, and a scal
 
 | Category       | Technology                      |
 | -------------- | ------------------------------- |
-| Framework      | React Native 0.81 + Expo SDK 54 |
+| Framework      | React Native 0.85 + Expo SDK 56 |
 | Language       | TypeScript (strict mode)        |
 | Navigation     | Expo Router (file-based)        |
 | Styling        | Unistyles v3 (C++ engine)       |
@@ -17,7 +17,7 @@ Expo-based React Native template with TypeScript, file-based routing, and a scal
 | Forms          | React Hook Form v7              |
 | Storage        | MMKV                            |
 | Animations     | Reanimated v4                   |
-| Error Tracking | BugSnag                         |
+| Error Tracking | Sentry                          |
 | Build          | EAS Build + local prebuild      |
 
 ## Quick Start
@@ -44,18 +44,18 @@ Copy the example env file and fill in the values:
 cp .env.example .env
 ```
 
-| Variable                      | Description                                  | Example                   |
-| ----------------------------- | -------------------------------------------- | ------------------------- |
-| `EXPO_PUBLIC_RUN_MODE`        | App environment                              | `dev` / `stg` / `prod`    |
-| `EXPO_PUBLIC_API_URL`         | API base URL                                 | `https://api.example.com` |
-| `EXPO_PUBLIC_BUGSNAG_API_KEY` | BugSnag API key for error reporting          | `abc123...`               |
-| `STRICT_ENV_VALIDATION`       | Enable strict Zod validation before prebuild | `true` / `false`          |
+| Variable                 | Description                                  | Example                   |
+| ------------------------ | -------------------------------------------- | ------------------------- |
+| `EXPO_PUBLIC_RUN_MODE`   | App environment                              | `dev` / `stg` / `prod`    |
+| `EXPO_PUBLIC_API_URL`    | API base URL                                 | `https://api.example.com` |
+| `EXPO_PUBLIC_SENTRY_DSN` | Sentry DSN for error reporting (optional)    | `https://...ingest...`    |
+| `STRICT_ENV_VALIDATION`  | Enable strict Zod validation before prebuild | `true` / `false`          |
 
 ## Running the App
 
 ### Development (Dev Client)
 
-> This app relies on native modules (MMKV, Unistyles v3, Reanimated, BugSnag) that are **not available in Expo Go**. Build a Dev Client first (see [Native Build](#native-build-dev-client) below) — `yarn start` then connects to it automatically.
+> This app relies on native modules (MMKV, Unistyles v3, Reanimated, Sentry) that are **not available in Expo Go**. Build a Dev Client first (see [Native Build](#native-build-dev-client) below) — `yarn start` then connects to it automatically.
 
 ```bash
 yarn start          # Start Metro dev server (connects to the Dev Client)
@@ -182,6 +182,11 @@ yarn eas:prod:android:submit   # Build Android + upload to Google Play
 src/
 ├── api/            # Axios instance and API methods
 ├── app/            # Expo Router — thin route files only
+├── assets/         # Icons (SVG + registry), images, fonts
+├── components/
+│   ├── ui/         # Design-system components, domain-free (Button, Input, ...)
+│   ├── primitives/ # Copy-pasted headless rn-primitives sources (created on demand)
+│   └── ...         # Shared business components used by 2+ features (domain-aware)
 ├── config/         # App config (env values, query defaults)
 ├── constants/      # Shared constants (storage keys, etc.)
 ├── features/       # Business features (screens, feature components, local hooks)
@@ -192,12 +197,22 @@ src/
 ├── providers/      # React context providers
 ├── schemas/        # Zod schemas for runtime validation
 ├── store/          # Zustand stores (client state)
-├── types/          # Global TypeScript types, enums, API contracts
-└── ui/
-    ├── assets/     # Icons (SVG), images, fonts
-    ├── components/ # Reusable atomic UI components
-    └── theme/      # Unistyles config, colors, fonts, metrics
+├── theme/          # Unistyles config, colors, fonts, metrics
+└── types/          # Global TypeScript types, enums, API contracts
 ```
+
+### Components (`src/components/`)
+
+Three tiers, following the [Obytes](https://starter.obytes.com/getting-started/project-structure/) / [Bluesky](https://github.com/bluesky-social/social-app/tree/main/src/components) pattern:
+
+| Tier                       | Location                      | Knows about the domain?                    |
+| -------------------------- | ----------------------------- | ------------------------------------------ |
+| Design system              | `src/components/ui/`          | No — pure presentation                     |
+| Headless primitives        | `src/components/primitives/`  | No                                         |
+| Shared business components | `src/components/` root        | Yes — may use domain types, hooks, queries |
+| Feature-local components   | `features/[name]/components/` | Yes                                        |
+
+**Promotion rule:** a component starts inside its feature; when a **second feature** needs it, move it to `src/components/` (business) or `src/components/ui/` (if it is domain-free).
 
 ### Features (`src/features/`)
 
@@ -206,26 +221,40 @@ Each feature is a self-contained module with screens, components, and optional l
 ```
 features/posts/
 ├── screens/            # Screen components (entry points)
-│   └── PostsScreen/
+│   └── PostsScreen.tsx
 ├── components/         # Feature-specific UI components
-│   └── PostCard/
+│   └── PostCard.tsx
 ├── hooks/              # (optional) Feature-local hooks
-├── types.ts            # (optional) Shared feature types
-└── index.ts
+└── types.ts            # (optional) Shared feature types
 ```
 
 ### Component Structure
 
-Every component (in `features/`, `ui/components/`, anywhere) is a **folder**:
+A component is a **single flat file** named after the component by default. Props types live in the same file, exported next to the component:
+
+```tsx
+// src/components/ui/ComponentName.tsx
+export type ComponentNameProps = { ... };
+
+export function ComponentName(props: ComponentNameProps) { ... }
+```
+
+When a component genuinely needs several files (e.g. `Input` with a controlled variant, a multi-part `Calendar`), give it a folder — with every file named explicitly, never `index.ts`:
 
 ```
-ComponentName/
-├── ComponentName.tsx
-├── types.ts            # Props, local enums (or ComponentName.types.ts)
-└── index.ts            # Barrel re-export
+src/components/ui/Input/
+├── Input.tsx
+└── ControlledInput.tsx
 ```
 
-Types are always extracted into a separate file next to the component, never inline.
+### No Barrel Files
+
+This template deliberately has **no `index.ts` re-export barrels** — always import from the concrete module (`@/components/ui/Icon`, `@/store/useAuthStore`). Barrels slow down Metro bundling and resolution, break tree-shaking, and cause fast-refresh cascades. This matches the current ecosystem consensus:
+
+- [Please Stop Using Barrel Files — TkDodo (TanStack maintainer)](https://tkdodo.eu/blog/please-stop-using-barrel-files)
+- [Speeding up the JavaScript ecosystem — the barrel file debacle (Marvin Hagemeister)](https://marvinh.dev/blog/speeding-up-javascript-ecosystem-part-7/)
+- [Ignite v11 removed all barrel files for Metro performance](https://github.com/infinitered/ignite/releases/tag/v11.0.0)
+- [Obytes starter bans barrel exports (fast-refresh issues)](https://starter.obytes.com/getting-started/project-structure/)
 
 ### State Management
 
@@ -251,7 +280,7 @@ const styles = StyleSheet.create((theme) => ({
 }));
 ```
 
-Theme configuration lives in `src/ui/theme/`:
+Theme configuration lives in `src/theme/`:
 
 | File           | Contents                               |
 | -------------- | -------------------------------------- |
@@ -268,11 +297,11 @@ Docs: [Unistyles v3](https://unistyl.es/v3/start/getting-started) · [Theming](h
 
 Translation files live in `src/i18n/locales/`. Supported languages are declared in `src/i18n/resources.ts`. The resolved language is persisted in MMKV so the user's choice survives restarts. Switch language at runtime with `useLanguage().changeLanguage(lng)`.
 
-> **RTL:** RTL direction switching is not enabled — no RTL languages are configured yet. When adding an RTL language (e.g. Arabic, Hebrew), uncomment the direction logic in `src/i18n/index.ts` and `src/hooks/useLanguage.ts`. Direction changes require a JS reload; use `expo-updates` for an OTA reload or prompt the user to restart manually.
+> **RTL:** RTL direction switching is not enabled — no RTL languages are configured yet. When adding an RTL language (e.g. Arabic, Hebrew), uncomment the direction logic in `src/i18n/i18n.ts` and `src/hooks/useLanguage.ts`. Direction changes require a JS reload; use `expo-updates` for an OTA reload or prompt the user to restart manually.
 
 ### SVG Icons
 
-SVGs are imported as React components via `react-native-svg-transformer`. Use the `<Icon>` component with the icon registry in `src/ui/assets/icons/`.
+SVGs are imported as React components via `react-native-svg-transformer`. Use the `<Icon>` component with the icon registry in `src/assets/icons/`.
 
 ## Testing
 
@@ -281,7 +310,7 @@ Jest + React Native Testing Library. See `src/docs/testing.md` for full conventi
 | Priority     | What                                 | Type             |
 | ------------ | ------------------------------------ | ---------------- |
 | **Required** | Utilities (`src/utils/`)             | Unit             |
-| **Required** | UI components (`src/ui/components/`) | Unit / Component |
+| **Required** | UI components (`src/components/ui/`) | Unit / Component |
 | Recommended  | Critical screens (auth, checkout)    | Integration      |
 | Recommended  | Zustand stores (non-trivial logic)   | Unit             |
 
@@ -345,11 +374,10 @@ Header max length: **150 characters**. Config: `commitlint.config.js`
 | Rule                        | Description                                                        |
 | --------------------------- | ------------------------------------------------------------------ |
 | Thin route files            | `app/` only imports screens from `features/` — no logic            |
-| Component = folder          | Every component is a folder with `.tsx`, `types.ts`, `index.ts`    |
-| Types next to component     | Props and local enums in `types.ts` beside the component           |
+| Component = flat file       | One `.tsx` file per component, props type exported from it         |
 | One store per file          | `use[Name]Store.ts` — see `src/docs/store.md`                      |
 | One query hook per resource | `use[Resource]Query.ts` — see `src/docs/hooks-query.md`            |
-| Re-export from index        | Every folder has an `index.ts` barrel file                         |
+| No barrel files             | Import from concrete modules, never from `index.ts` re-exports     |
 | Selectors only              | Never subscribe to the whole Zustand store                         |
 | Typed routes                | All routes are type-safe via Expo Router                           |
 | Feature-local hooks         | Keep in `features/[name]/hooks/`; move to `src/hooks/` when reused |
@@ -395,8 +423,8 @@ async function prepare() {
   await loadAuthFromStorage();
 
   await Font.loadAsync({
-    'Inter-Regular': require('@/ui/assets/fonts/Inter-Regular.ttf'),
-    'Inter-Bold': require('@/ui/assets/fonts/Inter-Bold.ttf'),
+    'Inter-Regular': require('@/assets/fonts/Inter-Regular.ttf'),
+    'Inter-Bold': require('@/assets/fonts/Inter-Bold.ttf'),
   });
 
   // ... prefetch, etc.
@@ -498,7 +526,7 @@ Setup guidance lives in [`src/docs/deep-linking.md`](src/docs/deep-linking.md) _
 
 ### Environment Validation
 
-Environment variables are validated at build time via Zod schema (`src/schemas/env.ts`). Direct access to `process.env` is blocked by an ESLint rule — use `Env` from `env.ts` (for `app.config.ts`) or `CONFIG` from `@/config` (for app code) instead.
+Environment variables are validated at build time via Zod schema (`src/schemas/env.ts`). Direct access to `process.env` is blocked by an ESLint rule — use `Env` from `env.ts` (for `app.config.ts`) or `CONFIG` from `@/config/config` (for app code) instead.
 
 ## All Scripts Reference
 

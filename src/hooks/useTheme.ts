@@ -4,9 +4,9 @@ import { UnistylesRuntime, useUnistyles } from 'react-native-unistyles';
 
 import { storage } from '@/utils/storage';
 
-import type { ThemeName } from '@/types';
+import type { ThemeName } from '@/types/common';
 
-import { STORAGE_KEYS } from '@/constants';
+import { STORAGE_KEYS } from '@/constants/storageKeys';
 
 const availableThemes: ThemeName[] = ['light', 'dark'];
 
