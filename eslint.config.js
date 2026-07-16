@@ -58,7 +58,7 @@ module.exports = defineConfig([
           selector:
             "MemberExpression[object.name='process'][property.name='env']",
           message:
-            'Use Env from env.ts or CONFIG from @/config instead of process.env',
+            'Use Env from env.ts or CONFIG from @/config/config instead of process.env',
         },
         {
           selector: 'ExportAllDeclaration',

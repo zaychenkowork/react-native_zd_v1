@@ -124,7 +124,7 @@ queryFn: () => fetcher(api.getUser(id));
 
 ### Environment access
 
-- **App code**: import `CONFIG` from `@/config` — never `process.env`
+- **App code**: import `CONFIG` from `@/config/config` — never `process.env`
 - **`app.config.ts` / `env.ts` only**: import `Env` from `env.ts`
 - `process.env` is blocked everywhere else by an ESLint rule (`no-restricted-syntax`)
 

@@ -5,7 +5,7 @@ import type { ReactNode } from 'react';
 import { useAppFocusManager } from '@/hooks/app/useAppFocusManager';
 import { useOnlineManager } from '@/hooks/app/useOnlineManager';
 
-import { QUERY_CONFIG } from '@/config';
+import { QUERY_CONFIG } from '@/config/config';
 
 export const queryClient = new QueryClient(QUERY_CONFIG);
 

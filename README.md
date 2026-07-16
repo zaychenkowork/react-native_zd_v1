@@ -503,7 +503,7 @@ Setup guidance lives in [`src/docs/deep-linking.md`](src/docs/deep-linking.md) _
 
 ### Environment Validation
 
-Environment variables are validated at build time via Zod schema (`src/schemas/env.ts`). Direct access to `process.env` is blocked by an ESLint rule — use `Env` from `env.ts` (for `app.config.ts`) or `CONFIG` from `@/config` (for app code) instead.
+Environment variables are validated at build time via Zod schema (`src/schemas/env.ts`). Direct access to `process.env` is blocked by an ESLint rule — use `Env` from `env.ts` (for `app.config.ts`) or `CONFIG` from `@/config/config` (for app code) instead.
 
 ## All Scripts Reference
 
