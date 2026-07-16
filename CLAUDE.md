@@ -1,8 +1,8 @@
 # CLAUDE.md
 
-Production-grade Expo SDK 54 / React Native 0.81 template — file-based routing (Expo Router), Unistyles v3 styling, React Query v5 server state, Zustand v5 client state, Zod v4 schemas, React Hook Form, MMKV storage, SecureStore for tokens, i18next localization, BugSnag error tracking.
+Production-grade Expo SDK 56 / React Native 0.85 template — file-based routing (Expo Router), Unistyles v3 styling, React Query v5 server state, Zustand v5 client state, Zod v4 schemas, React Hook Form, MMKV storage, SecureStore for tokens, i18next localization, Sentry error tracking.
 
-> Node >= 22. Uses a Dev Client — **Expo Go will not work** (MMKV, Unistyles v3, Reanimated, BugSnag require native modules).
+> Node >= 22. Uses a Dev Client — **Expo Go will not work** (MMKV, Unistyles v3, Reanimated, Sentry require native modules).
 
 ---
 
@@ -135,7 +135,7 @@ Auth tokens (access + refresh) live in **SecureStore** (iOS Keychain / Android K
 
 ### Forms
 
-Use `zod4Resolver` from `@/utils` (not `@hookform/resolvers` — it doesn't support Zod v4 yet). Define schemas in `src/schemas/`, infer types with `z.infer<>`.
+Use `zodResolver` from `@hookform/resolvers/zod` (Zod v4 is officially supported since v5.1.0). Define schemas in `src/schemas/`, infer types with `z.infer<>`.
 
 ### Imports order (ESLint-enforced)
 
@@ -145,7 +145,7 @@ Use `zod4Resolver` from `@/utils` (not `@hookform/resolvers` — it doesn't supp
 
 ## Testing
 
-Jest 30 + React Native Testing Library. Tests live under `__tests__/`, mirroring `src/` structure.
+Jest 29 (pinned by `jest-expo`) + React Native Testing Library v14. Tests live under `__tests__/`, mirroring `src/` structure. RNTL v14 APIs are async — `await render(...)`, `await fireEvent.press(...)`.
 
 **Required:** every `src/utils/` function and every `src/ui/components/` component must have a test.
 
@@ -190,7 +190,7 @@ Full rule: `.cursor/rules/conventional-commits.mdc`
 | `src/docs/api.md`                        | Axios instance, `fetcher()`, JWT refresh interceptor pattern                           |
 | `src/docs/hooks-query.md`                | React Query hook conventions, `fetcher()` usage, query key enums                       |
 | `src/docs/store.md`                      | Zustand store conventions, `useShallow` for multi-field selectors                      |
-| `src/docs/schemas.md`                    | Zod schema conventions, `zod4Resolver` for RHF                                         |
+| `src/docs/schemas.md`                    | Zod schema conventions, `zodResolver` for RHF                                          |
 | `src/docs/ui-components.md`              | UI component workflow: primitives vs components, Unistyles v3                          |
 | `src/docs/testing.md`                    | Full testing conventions, folder structure, examples                                   |
 | `src/docs/e2e.md`                        | Maestro E2E setup and how to run the smoke flow                                        |
