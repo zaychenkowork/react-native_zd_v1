@@ -4,32 +4,32 @@ import { ICONS } from '@/ui/assets/icons';
 import { Icon } from '@/ui/components';
 
 describe('Icon', () => {
-  it('returns null for an unknown icon name', () => {
+  it('returns null for an unknown icon name', async () => {
     // @ts-expect-error -- testing invalid name on purpose
-    const { toJSON } = render(<Icon name="nonExistentIcon" />);
+    const { toJSON } = await render(<Icon name="nonExistentIcon" />);
 
     expect(toJSON()).toBeNull();
   });
 
-  it('looks up the icon from the ICONS registry', () => {
+  it('looks up the icon from the ICONS registry', async () => {
     const spy = jest.fn((_props: Record<string, unknown>) => null);
     const original = ICONS.arrowRight;
 
     // Temporarily replace icon to verify it gets called
     (ICONS as Record<string, unknown>).arrowRight = spy;
 
-    render(<Icon name="arrowRight" />);
+    await render(<Icon name="arrowRight" />);
 
     expect(spy).toHaveBeenCalled();
 
     (ICONS as Record<string, unknown>).arrowRight = original;
   });
 
-  it('passes size and fill props to the SVG component', () => {
+  it('passes size and fill props to the SVG component', async () => {
     const spy = jest.fn((_props: Record<string, unknown>) => null);
     (ICONS as Record<string, unknown>).arrowRight = spy;
 
-    render(<Icon name="arrowRight" size={32} fill="#FF0000" />);
+    await render(<Icon name="arrowRight" size={32} fill="#FF0000" />);
 
     const props = spy.mock.calls[0][0];
     expect(props.width).toBe(32);
@@ -41,11 +41,11 @@ describe('Icon', () => {
     );
   });
 
-  it('uses default size of 20 and fill of currentColor', () => {
+  it('uses default size of 20 and fill of currentColor', async () => {
     const spy = jest.fn((_props: Record<string, unknown>) => null);
     (ICONS as Record<string, unknown>).arrowRight = spy;
 
-    render(<Icon name="arrowRight" />);
+    await render(<Icon name="arrowRight" />);
 
     const props = spy.mock.calls[0][0];
     expect(props.width).toBe(20);

@@ -116,6 +116,8 @@ describe('fetcher', () => {
 
 **Component test** (`__tests__/ui/ErrorFallback.test.tsx`):
 
+> RNTL v14 APIs are async: always `await render(...)`, `await fireEvent.press(...)`, `await act(...)`.
+
 ```tsx
 import { render, fireEvent } from '@tests/test-utils';
 
@@ -124,25 +126,25 @@ import { ErrorFallback } from '@/ui/components';
 describe('ErrorFallback', () => {
   const error = new Error('Something broke');
 
-  it('renders the error message', () => {
-    const { getByText } = render(<ErrorFallback error={error} />);
+  it('renders the error message', async () => {
+    const { getByText } = await render(<ErrorFallback error={error} />);
 
     expect(getByText('Something broke')).toBeTruthy();
   });
 
-  it('calls onRetry when the button is pressed', () => {
+  it('calls onRetry when the button is pressed', async () => {
     const onRetry = jest.fn();
-    const { getByRole } = render(
+    const { getByRole } = await render(
       <ErrorFallback error={error} onRetry={onRetry} />,
     );
 
-    fireEvent.press(getByRole('button'));
+    await fireEvent.press(getByRole('button'));
 
     expect(onRetry).toHaveBeenCalledTimes(1);
   });
 
-  it('hides the retry button when onRetry is not provided', () => {
-    const { queryByRole } = render(<ErrorFallback error={error} />);
+  it('hides the retry button when onRetry is not provided', async () => {
+    const { queryByRole } = await render(<ErrorFallback error={error} />);
 
     expect(queryByRole('button')).toBeNull();
   });
@@ -151,6 +153,6 @@ describe('ErrorFallback', () => {
 
 ## Docs
 
-- [Jest 30](https://jestjs.io/docs/getting-started)
+- [Jest 29](https://jestjs.io/docs/getting-started)
 - [React Native Testing Library](https://callstack.github.io/react-native-testing-library/)
 - [Testing React Native (official)](https://reactnative.dev/docs/testing-overview)
