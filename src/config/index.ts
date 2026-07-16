@@ -1,5 +1,5 @@
+import Env from '@env';
 import type { QueryClientConfig } from '@tanstack/react-query';
-import Env from 'env';
 
 export const CONFIG = {
   API_URL: Env.EXPO_PUBLIC_API_URL,

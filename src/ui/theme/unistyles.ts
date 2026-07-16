@@ -39,7 +39,8 @@ function resolveInitialTheme(): ThemeName {
 
   if (saved === 'light' || saved === 'dark') return saved;
 
-  return Appearance.getColorScheme() ?? 'light';
+  // RN 0.85+ may also return 'unspecified' — treat anything but 'dark' as light
+  return Appearance.getColorScheme() === 'dark' ? 'dark' : 'light';
 }
 
 StyleSheet.configure({
