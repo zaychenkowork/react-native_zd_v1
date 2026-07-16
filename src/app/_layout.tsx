@@ -1,4 +1,4 @@
-import '@/i18n';
+import '@/i18n/i18n';
 
 import Env from '@env';
 import * as Sentry from '@sentry/react-native';
@@ -8,7 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { ErrorFallback } from '@/ui/components/ErrorFallback';
+import { ErrorFallback } from '@/components/ui/ErrorFallback';
 
 import { useAppReady } from '@/hooks/app/useAppReady';
 

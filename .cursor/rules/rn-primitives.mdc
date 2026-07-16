@@ -1,6 +1,6 @@
 ---
 description: Use when creating, editing, or discussing UI components. Covers: checking local folders, copy-pasting source from rn-primitives and reactnativereusables, converting NativeWind to Unistyles v3, working with design screens, and asking clarifying questions before coding.
-globs: src/ui/**/*.tsx
+globs: src/components/**/*.tsx
 alwaysApply: false
 ---
 
@@ -9,12 +9,12 @@ alwaysApply: false
 ## Project structure
 
 ```
-src/ui/
+src/components/
 ├── primitives/      ← copy-pasted source from github.com/roninoss/rn-primitives (no styles)
 │   └── checkbox.tsx ← raw headless source, no Unistyles, no className
-├── components/      ← styled components: primitive + Unistyles, or adapted rnr source
-│   └── Checkbox.tsx
-└── theme/           ← colors, spacing, fonts, breakpoints (read-only reference)
+└── ui/              ← styled components: primitive + Unistyles, or adapted rnr source
+    └── Checkbox.tsx
+src/theme/           ← colors, spacing, fonts, breakpoints (read-only reference)
 ```
 
 > No barrel files (`index.ts` re-exports) — one flat file per component, imported by its concrete path.
@@ -25,9 +25,9 @@ src/ui/
 
 ### A. Decision tree
 
-**First:** check `src/ui/components/` — if the styled component already exists, use it. Stop here.
+**First:** check `src/components/ui/` — if the styled component already exists, use it. Stop here.
 
-**If not found in components**, check `src/ui/primitives/`:
+**If not found in components**, check `src/components/primitives/`:
 - If the primitive file exists → go to STEP 3, create the styled component in `components/`
 - If not → follow the tree below
 
@@ -45,13 +45,13 @@ from GitHub      (Button, Badge, Card, Input…)
       │          reactnativereusables GitHub:
       │          .../new-york/components/ui/<name>.tsx
       │          Convert NativeWind → Unistyles (STEP 2)
-      │          Save directly to src/ui/components/<Name>.tsx
+      │          Save directly to src/components/ui/<Name>.tsx
       │
-Save to src/ui/primitives/<name>.tsx (no styles)
-Then go to STEP 3 → create styled component in src/ui/components/
+Save to src/components/primitives/<name>.tsx (no styles)
+Then go to STEP 3 → create styled component in src/components/ui/
 ```
 
-**If not found on reactnativereusables either:** build from scratch with plain RN (`Pressable`, `View`, `Text`) directly in `src/ui/components/`.
+**If not found on reactnativereusables either:** build from scratch with plain RN (`Pressable`, `View`, `Text`) directly in `src/components/ui/`.
 
 ### B. How to copy a primitive from rn-primitives
 
@@ -65,7 +65,7 @@ Then go to STEP 3 → create styled component in src/ui/components/
    https://raw.githubusercontent.com/roninoss/rn-primitives/main/packages/<name>/src/index.tsx
    ```
 
-3. Save the source as-is to `src/ui/primitives/<name>.tsx`.
+3. Save the source as-is to `src/components/primitives/<name>.tsx`.
    - Do NOT add Unistyles or any styles here
    - Fix import paths if the source imports from other `@rn-primitives/*` packages
 
@@ -195,21 +195,21 @@ styles.useVariants({ variant, size });
 
 ---
 
-## STEP 3 — Create the styled component in src/ui/components/
+## STEP 3 — Create the styled component in src/components/ui/
 
-For components that have a primitive in `src/ui/primitives/`, create the styled wrapper here.
+For components that have a primitive in `src/components/primitives/`, create the styled wrapper here.
 
 ### File placement
 
 | What | Where |
 |---|---|
-| Headless primitive (from rn-primitives) | `src/ui/primitives/<name>.tsx` |
-| Styled component | `src/ui/components/<ComponentName>.tsx` |
-| Plain component (from rnr, no primitive) | `src/ui/components/<ComponentName>.tsx` |
+| Headless primitive (from rn-primitives) | `src/components/primitives/<name>.tsx` |
+| Styled component | `src/components/ui/<ComponentName>.tsx` |
+| Plain component (from rnr, no primitive) | `src/components/ui/<ComponentName>.tsx` |
 
 ### Code rules
 
-- Import primitives from `@/ui/primitives/<name>` — never from `@rn-primitives/*` directly inside components
+- Import primitives from `@/components/primitives/<name>` — never from `@rn-primitives/*` directly inside components
 - `StyleSheet.create((theme) => ({...}))` at the BOTTOM of every file
 - Always merge style prop: `[styles.root, style]`
 - No `StyleSheet` from `react-native`, no inline styles
@@ -223,9 +223,9 @@ For components that have a primitive in `src/ui/primitives/`, create the styled 
 Study every image in detail before asking. Then ask only about what is genuinely unclear:
 
 - All interactive states: default, pressed, focused, disabled, loading, error, success
-- Colors: map to tokens in `src/ui/theme/colors.ts`; ask if a color is not in the theme
-- Spacing/dimensions that differ from `src/ui/theme/metrics.ts`
-- Typography: match to `src/ui/theme/fonts.ts`
+- Colors: map to tokens in `src/theme/colors.ts`; ask if a color is not in the theme
+- Spacing/dimensions that differ from `src/theme/metrics.ts`
+- Typography: match to `src/theme/fonts.ts`
 - Corner radius, shadow, border
 - Animation behavior
 - Dark mode variant

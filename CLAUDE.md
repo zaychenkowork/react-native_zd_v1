@@ -59,19 +59,28 @@ src/features/[name]/
 
 Feature-local hooks live in `features/[name]/hooks/`; promote to `src/hooks/` only when reused across features.
 
-### Component = flat file
+### Component = flat file (folder only when complex)
 
-Every component (in features, ui/components, anywhere) is a single `.tsx` file named after the component. Export the props type from the same file:
+A component is a single `.tsx` file named after the component by default. Export the props type from the same file:
 
 ```tsx
-// src/ui/components/ComponentName.tsx
+// src/components/ui/ComponentName.tsx
 export type ComponentNameProps = { ... };
 export function ComponentName(props: ComponentNameProps) { ... }
 ```
 
+If a component genuinely needs multiple files (e.g. `Input` + `ControlledInput`, a multi-part `Calendar`), use a folder with explicitly named files — never `index.ts`: `src/components/ui/Input/Input.tsx`.
+
+### Component tiers
+
+- `src/components/ui/` — design system, domain-free (Button, Input)
+- `src/components/primitives/` — copy-pasted headless rn-primitives sources
+- `src/components/` root — shared business components (domain-aware modals, forms) used by 2+ features
+- `features/[name]/components/` — feature-local; promote to `src/components/` when a second feature needs it
+
 ### No barrel files
 
-Never create `index.ts` re-export barrels; always import from the concrete module (`@/store/useAuthStore`, `@/ui/components/Icon`). Barrels hurt Metro bundling/resolution and fast refresh — see [TkDodo](https://tkdodo.eu/blog/please-stop-using-barrel-files), [Marvin Hagemeister](https://marvinh.dev/blog/speeding-up-javascript-ecosystem-part-7/), [Ignite v11 release notes](https://github.com/infinitered/ignite/releases/tag/v11.0.0), [Obytes starter](https://starter.obytes.com/getting-started/project-structure/). ESLint bans `export * from` as a guard.
+Never create `index.ts` re-export barrels; always import from the concrete module (`@/store/useAuthStore`, `@/components/ui/Icon`). Barrels hurt Metro bundling/resolution and fast refresh — see [TkDodo](https://tkdodo.eu/blog/please-stop-using-barrel-files), [Marvin Hagemeister](https://marvinh.dev/blog/speeding-up-javascript-ecosystem-part-7/), [Ignite v11 release notes](https://github.com/infinitered/ignite/releases/tag/v11.0.0), [Obytes starter](https://starter.obytes.com/getting-started/project-structure/). ESLint bans `export * from` as a guard.
 
 ### Types location
 
@@ -96,7 +105,7 @@ const styles = StyleSheet.create((theme) => ({
 }));
 ```
 
-Colors, spacing, and radius always come from `theme.*` — never hardcoded. Theme config lives in `src/ui/theme/` (`colors.ts`, `fonts.ts`, `metrics.ts`, `unistyles.ts`).
+Colors, spacing, and radius always come from `theme.*` — never hardcoded. Theme config lives in `src/theme/` (`colors.ts`, `fonts.ts`, `metrics.ts`, `unistyles.ts`).
 
 ### Zustand — selectors only
 
@@ -138,7 +147,7 @@ Use `zodResolver` from `@hookform/resolvers/zod` (Zod v4 is officially supported
 
 ### Imports order (ESLint-enforced)
 
-`simple-import-sort` enforces: side effects → node builtins → external packages → `@/ui` → `@/hooks` → `@/providers` → `@/utils` → `@/api` → `@/store` → `@/types` → `@/constants` → `@/schemas` → `@/config` → `@/` other → relative.
+`simple-import-sort` enforces: side effects → node builtins → external packages → `@/components` → `@/theme`/`@/assets` → `@/hooks` → `@/providers` → `@/utils` → `@/api` → `@/store` → `@/types` → `@/constants` → `@/schemas` → `@/config` → `@/` other → relative.
 
 ---
 
@@ -146,7 +155,7 @@ Use `zodResolver` from `@hookform/resolvers/zod` (Zod v4 is officially supported
 
 Jest 29 (pinned by `jest-expo`) + React Native Testing Library v14. Tests live under `__tests__/`, mirroring `src/` structure. RNTL v14 APIs are async — `await render(...)`, `await fireEvent.press(...)`.
 
-**Required:** every `src/utils/` function and every `src/ui/components/` component must have a test.
+**Required:** every `src/utils/` function and every `src/components/ui/` component must have a test.
 
 **Recommended (not required):** critical screens (auth, onboarding, checkout), non-trivial Zustand stores.
 

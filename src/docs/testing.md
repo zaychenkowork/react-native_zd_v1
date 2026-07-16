@@ -9,7 +9,7 @@ Jest + React Native Testing Library for unit and component tests.
 | What                                     | Type             | Why                                                 |
 | ---------------------------------------- | ---------------- | --------------------------------------------------- |
 | **Utilities** (`src/utils/`)             | Unit             | Pure functions with no UI — fast, stable, high ROI  |
-| **UI components** (`src/ui/components/`) | Unit / Component | Reusable across the app — regressions are expensive |
+| **UI components** (`src/components/ui/`) | Unit / Component | Reusable across the app — regressions are expensive |
 
 Every utility function and every shared component **must** have a test file.
 
@@ -73,8 +73,9 @@ __tests__/
 ├── test-utils.tsx                # renderWithProviders helper
 ├── utils/                        # Unit tests for src/utils/
 │   └── validateEnv.test.ts
-├── ui/                           # Component tests for src/ui/components/
-│   └── ErrorFallback.test.tsx
+├── components/
+│   └── ui/                       # Component tests for src/components/ui/
+│       └── ErrorFallback.test.tsx
 ├── store/                        # Store tests (recommended)
 │   └── useAuthStore.test.ts
 └── features/                     # Screen tests (critical flows only)
@@ -113,14 +114,14 @@ describe('fetcher', () => {
 });
 ```
 
-**Component test** (`__tests__/ui/ErrorFallback.test.tsx`):
+**Component test** (`__tests__/components/ui/ErrorFallback.test.tsx`):
 
 > RNTL v14 APIs are async: always `await render(...)`, `await fireEvent.press(...)`, `await act(...)`.
 
 ```tsx
 import { render, fireEvent } from '@tests/test-utils';
 
-import { ErrorFallback } from '@/ui/components/ErrorFallback';
+import { ErrorFallback } from '@/components/ui/ErrorFallback';
 
 describe('ErrorFallback', () => {
   const error = new Error('Something broke');

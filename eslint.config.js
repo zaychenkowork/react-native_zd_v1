@@ -22,8 +22,10 @@ module.exports = defineConfig([
             ['^node:'],
             // External packages (third-party)
             ['^@?\\w'],
-            // Internal: components (ui)
-            ['^@/ui'],
+            // Internal: components (design system, primitives, shared business)
+            ['^@/components'],
+            // Internal: theme and assets
+            ['^@/theme', '^@/assets'],
             // Internal: hooks
             ['^@/hooks'],
             // Internal: providers

@@ -22,5 +22,6 @@ function renderWithProviders(ui: ReactElement, options?: RenderOptions) {
   return render(ui, { wrapper: AllProviders, ...options });
 }
 
+// eslint-disable-next-line no-restricted-syntax -- canonical Testing Library pattern: re-export the external lib with an overridden render; Metro perf concerns don't apply to jest-only helpers
 export * from '@testing-library/react-native';
 export { renderWithProviders as render };

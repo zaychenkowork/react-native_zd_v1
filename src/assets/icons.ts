@@ -1,4 +1,4 @@
-import ArrowRight from './arrow-right.svg';
+import ArrowRight from './icons/arrow-right.svg';
 
 export const ICONS = {
   arrowRight: ArrowRight,

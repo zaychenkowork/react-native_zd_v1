@@ -4,7 +4,7 @@ const config = {
 
   setupFiles: [
     'react-native-unistyles/mocks',
-    '<rootDir>/src/ui/theme/unistyles.ts',
+    '<rootDir>/src/theme/unistyles.ts',
   ],
 
   setupFilesAfterEnv: ['<rootDir>/__tests__/setup/setup.ts'],
@@ -32,7 +32,7 @@ const config = {
     '!src/**/*.d.ts',
     '!src/**/index.ts',
     '!src/app/**',
-    '!src/ui/theme/**',
+    '!src/theme/**',
   ],
 };
 

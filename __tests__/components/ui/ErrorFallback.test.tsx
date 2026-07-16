@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@tests/test-utils';
 
-import { ErrorFallback } from '@/ui/components/ErrorFallback';
+import { ErrorFallback } from '@/components/ui/ErrorFallback';
 
 describe('ErrorFallback', () => {
   const error = new Error('Something broke');

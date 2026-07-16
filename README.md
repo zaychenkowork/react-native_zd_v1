@@ -182,6 +182,11 @@ yarn eas:prod:android:submit   # Build Android + upload to Google Play
 src/
 ├── api/            # Axios instance and API methods
 ├── app/            # Expo Router — thin route files only
+├── assets/         # Icons (SVG + registry), images, fonts
+├── components/
+│   ├── ui/         # Design-system components, domain-free (Button, Input, ...)
+│   ├── primitives/ # Copy-pasted headless rn-primitives sources (created on demand)
+│   └── ...         # Shared business components used by 2+ features (domain-aware)
 ├── config/         # App config (env values, query defaults)
 ├── constants/      # Shared constants (storage keys, etc.)
 ├── features/       # Business features (screens, feature components, local hooks)
@@ -192,12 +197,22 @@ src/
 ├── providers/      # React context providers
 ├── schemas/        # Zod schemas for runtime validation
 ├── store/          # Zustand stores (client state)
-├── types/          # Global TypeScript types, enums, API contracts
-└── ui/
-    ├── assets/     # Icons (SVG), images, fonts
-    ├── components/ # Reusable atomic UI components
-    └── theme/      # Unistyles config, colors, fonts, metrics
+├── theme/          # Unistyles config, colors, fonts, metrics
+└── types/          # Global TypeScript types, enums, API contracts
 ```
+
+### Components (`src/components/`)
+
+Three tiers, following the [Obytes](https://starter.obytes.com/getting-started/project-structure/) / [Bluesky](https://github.com/bluesky-social/social-app/tree/main/src/components) pattern:
+
+| Tier                       | Location                      | Knows about the domain?                    |
+| -------------------------- | ----------------------------- | ------------------------------------------ |
+| Design system              | `src/components/ui/`          | No — pure presentation                     |
+| Headless primitives        | `src/components/primitives/`  | No                                         |
+| Shared business components | `src/components/` root        | Yes — may use domain types, hooks, queries |
+| Feature-local components   | `features/[name]/components/` | Yes                                        |
+
+**Promotion rule:** a component starts inside its feature; when a **second feature** needs it, move it to `src/components/` (business) or `src/components/ui/` (if it is domain-free).
 
 ### Features (`src/features/`)
 
@@ -215,18 +230,26 @@ features/posts/
 
 ### Component Structure
 
-Every component (in `features/`, `ui/components/`, anywhere) is a **single flat file** named after the component. Props types live in the same file, exported next to the component:
+A component is a **single flat file** named after the component by default. Props types live in the same file, exported next to the component:
 
 ```tsx
-// src/ui/components/ComponentName.tsx
+// src/components/ui/ComponentName.tsx
 export type ComponentNameProps = { ... };
 
 export function ComponentName(props: ComponentNameProps) { ... }
 ```
 
+When a component genuinely needs several files (e.g. `Input` with a controlled variant, a multi-part `Calendar`), give it a folder — with every file named explicitly, never `index.ts`:
+
+```
+src/components/ui/Input/
+├── Input.tsx
+└── ControlledInput.tsx
+```
+
 ### No Barrel Files
 
-This template deliberately has **no `index.ts` re-export barrels** — always import from the concrete module (`@/ui/components/Icon`, `@/store/useAuthStore`). Barrels slow down Metro bundling and resolution, break tree-shaking, and cause fast-refresh cascades. This matches the current ecosystem consensus:
+This template deliberately has **no `index.ts` re-export barrels** — always import from the concrete module (`@/components/ui/Icon`, `@/store/useAuthStore`). Barrels slow down Metro bundling and resolution, break tree-shaking, and cause fast-refresh cascades. This matches the current ecosystem consensus:
 
 - [Please Stop Using Barrel Files — TkDodo (TanStack maintainer)](https://tkdodo.eu/blog/please-stop-using-barrel-files)
 - [Speeding up the JavaScript ecosystem — the barrel file debacle (Marvin Hagemeister)](https://marvinh.dev/blog/speeding-up-javascript-ecosystem-part-7/)
@@ -257,7 +280,7 @@ const styles = StyleSheet.create((theme) => ({
 }));
 ```
 
-Theme configuration lives in `src/ui/theme/`:
+Theme configuration lives in `src/theme/`:
 
 | File           | Contents                               |
 | -------------- | -------------------------------------- |
@@ -274,11 +297,11 @@ Docs: [Unistyles v3](https://unistyl.es/v3/start/getting-started) · [Theming](h
 
 Translation files live in `src/i18n/locales/`. Supported languages are declared in `src/i18n/resources.ts`. The resolved language is persisted in MMKV so the user's choice survives restarts. Switch language at runtime with `useLanguage().changeLanguage(lng)`.
 
-> **RTL:** RTL direction switching is not enabled — no RTL languages are configured yet. When adding an RTL language (e.g. Arabic, Hebrew), uncomment the direction logic in `src/i18n/index.ts` and `src/hooks/useLanguage.ts`. Direction changes require a JS reload; use `expo-updates` for an OTA reload or prompt the user to restart manually.
+> **RTL:** RTL direction switching is not enabled — no RTL languages are configured yet. When adding an RTL language (e.g. Arabic, Hebrew), uncomment the direction logic in `src/i18n/i18n.ts` and `src/hooks/useLanguage.ts`. Direction changes require a JS reload; use `expo-updates` for an OTA reload or prompt the user to restart manually.
 
 ### SVG Icons
 
-SVGs are imported as React components via `react-native-svg-transformer`. Use the `<Icon>` component with the icon registry in `src/ui/assets/icons/`.
+SVGs are imported as React components via `react-native-svg-transformer`. Use the `<Icon>` component with the icon registry in `src/assets/icons/`.
 
 ## Testing
 
@@ -287,7 +310,7 @@ Jest + React Native Testing Library. See `src/docs/testing.md` for full conventi
 | Priority     | What                                 | Type             |
 | ------------ | ------------------------------------ | ---------------- |
 | **Required** | Utilities (`src/utils/`)             | Unit             |
-| **Required** | UI components (`src/ui/components/`) | Unit / Component |
+| **Required** | UI components (`src/components/ui/`) | Unit / Component |
 | Recommended  | Critical screens (auth, checkout)    | Integration      |
 | Recommended  | Zustand stores (non-trivial logic)   | Unit             |
 
@@ -400,8 +423,8 @@ async function prepare() {
   await loadAuthFromStorage();
 
   await Font.loadAsync({
-    'Inter-Regular': require('@/ui/assets/fonts/Inter-Regular.ttf'),
-    'Inter-Bold': require('@/ui/assets/fonts/Inter-Bold.ttf'),
+    'Inter-Regular': require('@/assets/fonts/Inter-Regular.ttf'),
+    'Inter-Bold': require('@/assets/fonts/Inter-Bold.ttf'),
   });
 
   // ... prefetch, etc.
