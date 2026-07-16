@@ -1,7 +1,7 @@
 import '@/i18n';
 
-import Bugsnag from '@bugsnag/expo';
-import BugsnagPerformance from '@bugsnag/expo-performance';
+import Env from '@env';
+import * as Sentry from '@sentry/react-native';
 import { type ErrorBoundaryProps, Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -16,11 +16,19 @@ import { QueryProvider } from '@/providers';
 
 import { useAuthStore } from '@/store';
 
+Sentry.init({
+  dsn: Env.EXPO_PUBLIC_SENTRY_DSN, // empty DSN disables the SDK
+  enabled: !!Env.EXPO_PUBLIC_SENTRY_DSN,
+  environment: Env.EXPO_PUBLIC_RUN_MODE,
+  // Performance tracing sample rate — tune down in production if volume is high.
+  tracesSampleRate: 1.0,
+});
+
 SplashScreen.preventAutoHideAsync();
 
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   useEffect(() => {
-    Bugsnag.notify(error);
+    Sentry.captureException(error);
   }, [error]);
 
   return <ErrorFallback error={error} onRetry={retry} />;
@@ -57,4 +65,4 @@ function RootNavigator() {
   );
 }
 
-export default BugsnagPerformance.withInstrumentedAppStarts(RootLayout);
+export default Sentry.wrap(RootLayout);

@@ -12,12 +12,9 @@ const config = {
   testMatch: ['<rootDir>/__tests__/**/*.test.{ts,tsx}'],
 
   moduleNameMapper: {
-    '^@bugsnag/expo$': '<rootDir>/__tests__/setup/mocks/bugsnag.ts',
-    '^@bugsnag/expo-performance$':
-      '<rootDir>/__tests__/setup/mocks/bugsnag-performance.ts',
+    '^@sentry/react-native$': '<rootDir>/__tests__/setup/mocks/sentry.ts',
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@env$': '<rootDir>/env.ts',
-    '^env$': '<rootDir>/env.ts',
     '^@tests/(.*)$': '<rootDir>/__tests__/$1',
     '\\.svg$': '<rootDir>/__tests__/setup/svgMock.tsx',
     '^expo/src/winter$': '<rootDir>/__tests__/setup/empty.ts',
