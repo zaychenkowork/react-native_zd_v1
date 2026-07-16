@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Production-grade Expo SDK 56 / React Native 0.85 template — file-based routing (Expo Router), Unistyles v3 styling, React Query v5 server state, Zustand v5 client state, Zod v4 schemas, React Hook Form, MMKV storage, SecureStore for tokens, i18next localization, Sentry error tracking.
+Production-grade Expo SDK 57 / React Native 0.86 template — file-based routing (Expo Router), Unistyles v3 styling, React Query v5 server state, Zustand v5 client state, Zod v4 schemas, React Hook Form, MMKV storage, SecureStore for tokens, i18next localization, Sentry error tracking.
 
 > Node >= 22. Uses a Dev Client — **Expo Go will not work** (MMKV, Unistyles v3, Reanimated, Sentry require native modules).
 
